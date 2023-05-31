@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationDrawer(
-    coroutineScope: CoroutineScope, scaffoldState: ScaffoldState
+  coroutineScope: CoroutineScope, scaffoldState: ScaffoldState
 )
 {
   Column(

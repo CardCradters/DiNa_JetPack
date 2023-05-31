@@ -23,18 +23,24 @@ fun CardList()
 {
   val contextForToast = LocalContext.current.applicationContext
   val scrollState = rememberScrollState()
-  Box() {
-    Column(Modifier.padding(all = 16.dp)
-        .fillMaxSize()) {
-      Text("Last Activity",
-      fontSize = 14.sp,
-      fontWeight = FontWeight.Medium
+  Box {
+    Column(
+      Modifier
+        .padding(all = 16.dp)
+        .fillMaxSize()
+    ) {
+      Text(
+        "Last Activity",
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium
       )
       Spacer(Modifier.height(16.dp))
-      Column(Modifier.verticalScroll(scrollState),
-      verticalArrangement = Arrangement.spacedBy(
-        space = 8.dp
-      )) {
+      Column(
+        Modifier.verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(
+          space = 8.dp
+        )
+      ) {
         repeat(10) {
           CardListItem(contextForToast = contextForToast)
         }

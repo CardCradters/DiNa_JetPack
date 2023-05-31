@@ -2,23 +2,18 @@ package com.example.dina_compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,9 +35,11 @@ fun ScaffoldLayout()
       TopAppBar {
         coroutineScope.launch {
 //          sheetState.bottomSheetState.expand()
-          if (sheetState.bottomSheetState.isCollapsed) {
+          if (sheetState.bottomSheetState.isCollapsed)
+          {
             sheetState.bottomSheetState.expand()
-          } else {
+          } else
+          {
             sheetState.bottomSheetState.collapse()
           }
         }
@@ -60,8 +57,7 @@ fun ScaffoldLayout()
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
           contextForToast = contextForToast,
-
-        )
+          )
       },
       content = {
         //    Activity
@@ -70,7 +66,7 @@ fun ScaffoldLayout()
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-      HomeScreen()
+          HomeScreen()
         }
       }
     )
