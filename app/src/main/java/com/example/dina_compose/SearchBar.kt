@@ -41,9 +41,9 @@ fun SearchBar()
 
   Surface(
     Modifier
-        .padding(top = 16.dp)
-        .padding(horizontal = 16.dp)
-        .fillMaxWidth(),
+      .padding(top = 16.dp)
+      .padding(horizontal = 16.dp)
+      .fillMaxWidth(),
     shape = RoundedCornerShape(8.dp),
     color = Color.White.copy(alpha = ContentAlpha.disabled)
   ) {
@@ -79,11 +79,11 @@ fun SearchBar()
       ),
       keyboardActions = KeyboardActions(
         onSearch = {
-//          TODO Search Actions
+//          TODO Search Actions >=> >=> >=> >=> >=> >=> >=> >=> >=>
           focusManager.clearFocus()
 
           Toast.makeText(context, "On Search Click: value = $value", Toast.LENGTH_SHORT)
-              .show()
+            .show()
         }
       ),
       colors = TextFieldDefaults.textFieldColors(

@@ -26,8 +26,8 @@ fun NamecardView()
 {
   Card(
     Modifier
-        .padding(all = 16.dp)
-        .aspectRatio(328f / 207f),
+      .padding(all = 16.dp)
+      .aspectRatio(328f / 207f),
     shape = RoundedCornerShape(20.dp),
     elevation = 5.dp
   ) {
@@ -39,7 +39,7 @@ fun NamecardView()
     )
     Column(
       Modifier
-          .padding(16.dp),
+        .padding(16.dp),
     ) {
       Text(
         "LOGO", //TODO ganti nama Company dari API
@@ -55,7 +55,7 @@ fun NamecardView()
     }
     Column(
       Modifier
-          .padding(16.dp),
+        .padding(16.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center
     ) {

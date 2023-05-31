@@ -41,9 +41,9 @@ fun TestCode()
 
   Surface(
     Modifier
-        .padding(top = 16.dp)
-        .padding(horizontal = 16.dp)
-        .fillMaxWidth(),
+      .padding(top = 16.dp)
+      .padding(horizontal = 16.dp)
+      .fillMaxWidth(),
     shape = RoundedCornerShape(8.dp),
     color = Color.White.copy(alpha = ContentAlpha.disabled)
   ) {
@@ -83,7 +83,7 @@ fun TestCode()
           focusManager.clearFocus()
 
           Toast.makeText(context, "On Search Click: value = $value", Toast.LENGTH_SHORT)
-              .show()
+            .show()
         }
       ),
       colors = TextFieldDefaults.textFieldColors(

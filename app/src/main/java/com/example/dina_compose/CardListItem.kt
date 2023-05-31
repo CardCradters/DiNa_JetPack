@@ -8,10 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -37,23 +34,21 @@ fun CardListItem(contextForToast: Context)
 {
   Card(
     Modifier
-        .clickable {
-          Toast
-              .makeText(contextForToast, "Card List Clicked", Toast.LENGTH_SHORT)
-              .show()
-        }
-        .wrapContentHeight()
-        .fillMaxWidth()
-        ,
+      .clickable {
+        Toast
+          .makeText(contextForToast, "Card List Clicked", Toast.LENGTH_SHORT)
+          .show()
+      }
+      .wrapContentHeight()
+      .fillMaxWidth(),
     elevation = 3.dp,
     shape = RoundedCornerShape(8.dp)
   ) {
     Row(
       Modifier
-          .wrapContentHeight()
-          .padding(horizontal = 16.dp)
-          .padding(vertical = 16.dp)
-          ,
+        .wrapContentHeight()
+        .padding(horizontal = 16.dp)
+        .padding(vertical = 16.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -65,14 +60,14 @@ fun CardListItem(contextForToast: Context)
           painter = painterResource(id = R.drawable.user),
           contentDescription = "Profile Picture",
           Modifier
-              .clip(shape = CircleShape)
-              .size(60.dp)
-              .background(color = Color.Black)
+            .clip(shape = CircleShape)
+            .size(60.dp)
+            .background(color = Color.Black)
 //              .fillMaxHeight(),
         )
         Column(
           Modifier
-              .padding(start = 8.dp),
+            .padding(start = 8.dp),
 //              .fillMaxHeight(),
           verticalArrangement = Arrangement.Center
         ) {

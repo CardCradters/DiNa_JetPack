@@ -12,17 +12,21 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheet(
-    coroutineScope: CoroutineScope,
-    scaffoldState: BottomSheetScaffoldState,
-    contextForToast: Context,
+  coroutineScope: CoroutineScope,
+  scaffoldState: BottomSheetScaffoldState,
+  contextForToast: Context,
 )
 {
   LazyColumn {
@@ -46,4 +50,12 @@ fun BottomSheet(
       )
     }
   }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview
+@Composable
+fun Previewer(){
+  BottomSheet(coroutineScope = rememberCoroutineScope() , scaffoldState = rememberBottomSheetScaffoldState(), contextForToast =
+  LocalContext.current.applicationContext)
 }
