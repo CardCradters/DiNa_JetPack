@@ -17,10 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview(showBackground = true)
 @Composable
 fun ScaffoldLayout()
 {
@@ -28,6 +28,7 @@ fun ScaffoldLayout()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
   val contextForToast = LocalContext.current.applicationContext
+//  val bottomBarVisible = remember { mutableStateOf(true) }
 
   Scaffold(
     scaffoldState = scaffoldState,
@@ -46,18 +47,23 @@ fun ScaffoldLayout()
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast)
+        BottomBar(contextForToast = contextForToast)
+//      if (bottomBarVisible.value)
+//      {
+//        BottomBar(contextForToast = contextForToast)
+//      }
     },
   ) { innerPadding ->
     BottomSheetScaffold(scaffoldState = sheetState,
       sheetBackgroundColor = MaterialTheme.colors.background,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+      sheetPeekHeight = 0.dp,
       sheetContent = {
         BottomSheet(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
           contextForToast = contextForToast,
-          )
+        )
       },
       content = {
         //    Activity
@@ -71,7 +77,18 @@ fun ScaffoldLayout()
       }
     )
   }
+//  LaunchedEffect(sheetState.bottomSheetState.isExpanded) {
+//    bottomBarVisible.value = !sheetState.bottomSheetState.isExpanded
+//  }
 }
 
+@Preview()
+@Composable
+fun ScaffoldLayoutPreview()
+{
+  DiNa_ComposeTheme(darkTheme = false) {
+    ScaffoldLayout()
+  }
+}
 
 

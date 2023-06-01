@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
 fun SearchBar()
@@ -82,7 +83,11 @@ fun SearchBar()
 //          TODO Search Actions >=> >=> >=> >=> >=> >=> >=> >=> >=>
           focusManager.clearFocus()
 
-          Toast.makeText(context, "On Search Click: value = $value", Toast.LENGTH_SHORT)
+          Toast.makeText(
+            context,
+            "On Search Click: value = $value",
+            Toast.LENGTH_SHORT
+          )
             .show()
         }
       ),
@@ -97,10 +102,11 @@ fun SearchBar()
   }
 }
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
-fun SearchPreview()
+fun SearchBarPreview()
 {
-  SearchBar(
-  )
+  DiNa_ComposeTheme(darkTheme = false) {
+    SearchBar()
+  }
 }

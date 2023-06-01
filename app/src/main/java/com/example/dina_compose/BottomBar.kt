@@ -18,27 +18,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
 fun BottomBar(contextForToast: Context)
 {
   // items list
   val bottomMenuItemsList = prepareBottomMenu()
-  var selectedItem by remember {
-    mutableStateOf("Home")
-  }
+  var selectedItem by remember { mutableStateOf("Home") }
 
   BottomNavigation(
-    backgroundColor = MaterialTheme.colors.background
+    backgroundColor = MaterialTheme.colors.background,
   ) {
     bottomMenuItemsList.forEach { menuItem ->
       BottomNavigationItem(
-        selected = (selectedItem == menuItem.label), onClick = {
+        selected = (selectedItem == menuItem.label),
+        onClick = {
           selectedItem = menuItem.label
           Toast.makeText(contextForToast, menuItem.label, Toast.LENGTH_SHORT).show()
-        }, icon = {
+        },
+        icon = {
           Icon(imageVector = menuItem.icon, contentDescription = menuItem.label)
-        })
+        }
+      )
     }
   }
 }
@@ -57,3 +61,12 @@ private fun prepareBottomMenu(): List<BottomMenuItem>
 }
 
 data class BottomMenuItem(val label: String, val icon: ImageVector)
+
+@Preview()
+@Composable
+fun BottomBarPreview()
+{
+  DiNa_ComposeTheme(darkTheme = false) {
+    BottomBar(contextForToast = LocalContext.current.applicationContext)
+  }
+}

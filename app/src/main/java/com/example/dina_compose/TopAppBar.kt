@@ -1,5 +1,6 @@
 package com.example.dina_compose
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -8,6 +9,8 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
 fun TopAppBar(onNavigationIconClick: () -> Unit)
@@ -15,7 +18,8 @@ fun TopAppBar(onNavigationIconClick: () -> Unit)
   TopAppBar(
     title = {
       Text(
-        text = "DiNa"
+        text = "DiNa",
+        style = MaterialTheme.typography.h1
       )
     },
     backgroundColor = MaterialTheme.colors.background,
@@ -29,4 +33,14 @@ fun TopAppBar(onNavigationIconClick: () -> Unit)
       }
     }
   )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview()
+@Composable
+fun TopAppBarPreview()
+{
+  DiNa_ComposeTheme(darkTheme = false) {
+    TopAppBar(onNavigationIconClick = { })
+  }
 }

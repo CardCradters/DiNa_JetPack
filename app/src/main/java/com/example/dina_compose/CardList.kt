@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
 fun CardList()
@@ -49,9 +50,11 @@ fun CardList()
   }
 }
 
-@Preview
+@Preview()
 @Composable
 fun CardListPreview()
 {
-  CardList()
+  DiNa_ComposeTheme(darkTheme = false) {
+    CardList()
+  }
 }

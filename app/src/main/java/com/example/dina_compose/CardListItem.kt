@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,10 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
 fun CardListItem(contextForToast: Context)
@@ -63,30 +63,24 @@ fun CardListItem(contextForToast: Context)
             .clip(shape = CircleShape)
             .size(60.dp)
             .background(color = Color.Black)
-//              .fillMaxHeight(),
         )
         Column(
           Modifier
             .padding(start = 8.dp),
-//              .fillMaxHeight(),
           verticalArrangement = Arrangement.Center
         ) {
           Text(
-            "Username",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            letterSpacing = 1.sp,
+            text = "Username",
+            style = MaterialTheme.typography.subtitle1,
             modifier = Modifier.padding(bottom = 4.dp)
           )
           Text(
-            "Job Title",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Normal
+            text = "Job Title",
+            style = MaterialTheme.typography.subtitle2,
           )
           Text(
-            "Company Name",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Normal
+            text = "Company Name",
+            style = MaterialTheme.typography.subtitle2
           )
         }
       }
@@ -98,10 +92,11 @@ fun CardListItem(contextForToast: Context)
   }
 }
 
-@Preview(showBackground = true)
-@Composable fun CardListItemPreview()
+@Preview()
+@Composable
+fun CardListItemPreview()
 {
-  CardListItem(
-    contextForToast = LocalContext.current.applicationContext
-  )
+  DiNa_ComposeTheme(darkTheme = false) {
+    CardListItem(contextForToast = LocalContext.current.applicationContext)
+  }
 }
