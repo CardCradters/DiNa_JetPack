@@ -43,7 +43,7 @@ fun MyUi()
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun GreetingPreview()
+fun MainPreview()
 {
   DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
     // 'background' color from the theme

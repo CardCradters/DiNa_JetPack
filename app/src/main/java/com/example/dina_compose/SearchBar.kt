@@ -102,7 +102,7 @@ fun SearchBar()
   }
 }
 
-@Preview()
+@Preview
 @Composable
 fun SearchBarPreview()
 {

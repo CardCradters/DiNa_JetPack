@@ -95,7 +95,7 @@ data class BottomSheetItem(val label: String, val icon: Painter)
 fun BottomSheetPreview()
 {
   DiNa_ComposeTheme(darkTheme = false) {
-    TestCode(
+    BottomSheet(
       coroutineScope = rememberCoroutineScope(),
       scaffoldState = rememberBottomSheetScaffoldState(),
       contextForToast = LocalContext.current.applicationContext

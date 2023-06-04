@@ -29,7 +29,6 @@ fun ScaffoldLayout()
   val coroutineScope = rememberCoroutineScope()
   val contextForToast = LocalContext.current.applicationContext
 //  val bottomBarVisible = remember { mutableStateOf(true) }
-
   Scaffold(
     scaffoldState = scaffoldState,
     topBar = {
@@ -47,7 +46,7 @@ fun ScaffoldLayout()
       }
     },
     bottomBar = {
-        BottomBar(contextForToast = contextForToast)
+      BottomBar(contextForToast = contextForToast)
 //      if (bottomBarVisible.value)
 //      {
 //        BottomBar(contextForToast = contextForToast)
@@ -72,7 +71,8 @@ fun ScaffoldLayout()
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          HomeScreen()
+//          HomeScreen()
+          Profile()
         }
       }
     )
@@ -82,7 +82,7 @@ fun ScaffoldLayout()
 //  }
 }
 
-@Preview()
+@Preview
 @Composable
 fun ScaffoldLayoutPreview()
 {

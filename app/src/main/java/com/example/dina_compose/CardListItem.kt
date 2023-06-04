@@ -92,7 +92,7 @@ fun CardListItem(contextForToast: Context)
   }
 }
 
-@Preview()
+@Preview
 @Composable
 fun CardListItemPreview()
 {

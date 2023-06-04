@@ -40,11 +40,11 @@ fun NamecardView()
     )
     Text(
       text = "PT. AXIA PRIMA SEJAHTERA", //TODO ganti nama Company dari API
+      style = MaterialTheme.typography.h1,
       modifier = Modifier
         .fillMaxWidth()
         .padding(20.dp),
       color = Color.White,
-      style = MaterialTheme.typography.h1,
     )
     Column(
       modifier = Modifier
@@ -67,7 +67,7 @@ fun NamecardView()
   }
 }
 
-@Preview()
+@Preview
 @Composable
 fun NamecardPreview()
 {
