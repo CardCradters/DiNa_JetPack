@@ -1,6 +1,5 @@
 package com.example.dina_compose.component
 
-
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
