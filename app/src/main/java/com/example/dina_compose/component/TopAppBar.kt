@@ -1,4 +1,4 @@
-package com.example.dina_compose
+package com.example.dina_compose.component
 
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton

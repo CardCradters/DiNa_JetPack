@@ -1,4 +1,4 @@
-package com.example.dina_compose
+package com.example.dina_compose.component
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TestCode()
+fun SearchBar()
 {
   var value by remember {
     mutableStateOf("")
@@ -79,7 +79,7 @@ fun TestCode()
       ),
       keyboardActions = KeyboardActions(
         onSearch = {
-//          TODO Search Actions
+//          TODO Search Actions >=> >=> >=> >=> >=> >=> >=> >=> >=>
           focusManager.clearFocus()
 
           Toast.makeText(context, "On Search Click: value = $value", Toast.LENGTH_SHORT)
@@ -98,8 +98,9 @@ fun TestCode()
 }
 
 @Preview(showBackground = true)
-@Composable fun SearchBarPreview()
+@Composable
+fun SearchPreview()
 {
-  TestCode(
+  SearchBar(
   )
 }

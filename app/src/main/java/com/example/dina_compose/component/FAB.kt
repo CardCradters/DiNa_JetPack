@@ -1,4 +1,4 @@
-package com.example.dina_compose
+package com.example.dina_compose.component
 
 import android.content.Context
 import android.widget.Toast

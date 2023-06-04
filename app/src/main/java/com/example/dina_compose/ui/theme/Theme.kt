@@ -1,5 +1,4 @@
 package com.example.dina_compose.ui.theme
-
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -30,8 +29,8 @@ private val LightColorScheme = lightColors(
 
 @Composable
 fun DiNa_ComposeTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true, content: @Composable () -> Unit
+  darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+
+  dynamicColor: Boolean = true, content: @Composable () -> Unit
 )
 {
   val colorScheme = when
@@ -51,11 +50,11 @@ fun DiNa_ComposeTheme(
       val window = (view.context as Activity).window
       window.statusBarColor = colorScheme.background.toArgb()
       WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-          darkTheme
+        darkTheme
     }
   }
 
   MaterialTheme(
-    colors = colorScheme, typography = Typography, content = content
+    colors = colorScheme, typography = MyTypography, content = content
   )
 }

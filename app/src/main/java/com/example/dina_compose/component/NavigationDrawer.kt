@@ -1,4 +1,4 @@
-package com.example.dina_compose
+package com.example.dina_compose.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

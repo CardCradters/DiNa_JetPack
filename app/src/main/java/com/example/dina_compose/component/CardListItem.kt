@@ -1,4 +1,4 @@
-package com.example.dina_compose
+package com.example.dina_compose.component
 
 import android.content.Context
 import android.widget.Toast
@@ -22,15 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dina_compose.R
+import com.example.dina_compose.data.UserRequest
 
 @Composable
-fun CardListItem(contextForToast: Context)
+fun CardListItem(user: UserRequest, contextForToast: Context)
 {
   Card(
     Modifier
@@ -72,19 +72,19 @@ fun CardListItem(contextForToast: Context)
           verticalArrangement = Arrangement.Center
         ) {
           Text(
-            "Username",
+            user.name,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 1.sp,
             modifier = Modifier.padding(bottom = 4.dp)
           )
           Text(
-            "Job Title",
+            user.job_title,
             fontSize = 12.sp,
             fontWeight = FontWeight.Normal
           )
           Text(
-            "Company Name",
+            user.workplace,
             fontSize = 12.sp,
             fontWeight = FontWeight.Normal
           )
@@ -98,10 +98,14 @@ fun CardListItem(contextForToast: Context)
   }
 }
 
-@Preview(showBackground = true)
-@Composable fun CardListItemPreview()
+@Composable
+fun CardListItemPreview()
 {
-  CardListItem(
-    contextForToast = LocalContext.current.applicationContext
-  )
+////  val user = UserResponse(
+////    uid = "SfKdlwnuCmNjasiPzz1g8xH4a9k1",
+////    name = "Syabina Nur",
+////    job_title = "Developer",
+////    workplace = "ABC Company"
+////  )
+//  CardListItem(user = user, contextForToast = LocalContext.current.applicationContext)
 }

@@ -1,3 +1,35 @@
 <resources>
     <string name = "app_name">DiNa_Compose</string>
+    <string name="star">star</string>
+    <string name="desc_regis">Create account by filling the form below or scan your namecard.</string>
+    <string name="enter_Name">Username</string>
+    <string name="enter_phone">Phone Number</string>
+    <string name="must_not_empty">Must Not Empty</string>
+    <string name="not_type_email">Wrong Email Format (@)</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="email">Email</string>
+    <string name="login">Sign In</string>
+    <string name="register">Sign Up</string>
+    <string name="dont_have_account">Don\'t have account?</string>
+    <string name="enter_password">Password</string>
+    <string name="more_than_character">More than character</string>
+    <string name="notif">Notification</string>
+    <string name="setting">settings</string>
+    <string name="home">Home</string>
+    <string name="Share">Share</string>
+    <string name="PakacageShare">Package Share</string>
+    <string name="Profile">Profile</string>
+    <string name="barcode">Scan Barcode</string>
+    <string name="stream">Streamline your networking with DiNa</string>
+    <string name="intro">“DiNa” for quickly and easily share and organize contact information, without the hassle of physical business cards.</string>
+    <string name="lets_start">Start</string>
+    <string name="Up_img">Upload Image</string>
+    <string name="or_sigin">Or Sign In With</string>
+    <string name="google">Google</string>
+    <string name="digitize">"Digitize Your Network"</string>
+    <string name="search">Search\n</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="welcome">Welcome back!</string>
+    <string name="have_account">Do you already have account?</string>
+    <string name="placeholder_search">Search</string>
 </resources>
