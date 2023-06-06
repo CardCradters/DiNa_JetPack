@@ -24,7 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,8 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.dina_compose.BottomBar
-import com.example.dina_compose.BottomSheet
+import com.example.dina_compose.component.BottomBar
+import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.CardListItem
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
@@ -59,12 +62,15 @@ fun Home(
         Color(0xFFFFFFFF)
       )
     )
-  val contextForToast = LocalContext.current
+  val context = LocalContext.current
   val scrollState = rememberLazyListState()
   val users by viewModel.users.collectAsState(emptyList())
+  val searchResult by viewModel.searchResult.collectAsState(emptyList())
+  var queryState by remember { mutableStateOf("") }
+
 
   LaunchedEffect(Unit) {
-    viewModel.fetchUsers(contextForToast)
+    viewModel.fetchUsers(context)
   }
 
 
@@ -83,7 +89,7 @@ fun Home(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast)
+      BottomBar(navController = navController,contextForToast = context)
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -94,7 +100,9 @@ fun Home(
         BottomSheet(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
-          contextForToast = contextForToast,
+          contextForToast = context,
+          navController = navController,
+          viewModel = viewModel
         )
       },
       content = {
@@ -108,7 +116,12 @@ fun Home(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
           ) {
-            SearchBar()
+            SearchBar(onSearch = { query ->
+              queryState = query
+              viewModel.performSearch(context, query) // Call performSearch in the
+            // view
+            // model
+            })
             NamecardView()
             Text(
               "Digitize Your Network",
@@ -137,7 +150,7 @@ fun Home(
                   verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                   state = scrollState
                 ) {
-                  if (users.isEmpty()) {
+                  if (users.isEmpty() && queryState.isEmpty()) {
                     item {
                       Text(
                         text = "Anda belum pernah menyimpan 1 pun kontak",
@@ -145,9 +158,11 @@ fun Home(
                         textAlign = TextAlign.Center
                       )
                     }
-                  }
-                  items(users) { user ->
-                    CardListItem(user = user, contextForToast = contextForToast)
+                  } else {
+                    val itemsToDisplay = if (queryState.isEmpty()) users else searchResult
+                    items(itemsToDisplay) { user ->
+                      CardListItem(user = user, context = context, viewModel = viewModel)
+                    }
                   }
                 }
               }
