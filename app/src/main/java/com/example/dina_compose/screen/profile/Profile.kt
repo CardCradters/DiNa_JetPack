@@ -1,4 +1,4 @@
-package com.example.dina_compose.screen.home
+package com.example.dina_compose.screen.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -27,47 +29,42 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.dina_compose.BottomBar
 import com.example.dina_compose.BottomSheet
-import com.example.dina_compose.component.CardListItem
+import com.example.dina_compose.component.DetailHead
+import com.example.dina_compose.component.DetailItems
 import com.example.dina_compose.component.NamecardView
-import com.example.dina_compose.component.SearchBar
+import com.example.dina_compose.component.ProfilePicture
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Home(
+fun Profile(
   navController: NavHostController,
-  viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+  viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 )
 {
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
   val brush =
-    androidx.compose.ui.graphics.Brush.verticalGradient(
-      colors = listOf(Color(0xFF83B9E2), Color(0xFFFFFFFF)),
-      startY = 0f,
-      endY = Float.POSITIVE_INFINITY,
-      tileMode = TileMode.Clamp,
+    androidx.compose.ui.graphics.Brush.linearGradient(
+      listOf(
+        Color(0xFF83B9E2),
+        Color(0xFFFFFFFF)
+      )
     )
-
-//    androidx.compose.ui.graphics.Brush.linearGradient(
-//      listOf(
-//        Color(0xFF83B9E2),
-//        Color(0xFFFFFFFF)
-//      )
-//    )
   val contextForToast = LocalContext.current
   val scrollState = rememberLazyListState()
   val users by viewModel.users.collectAsState(emptyList())
@@ -76,18 +73,6 @@ fun Home(
     viewModel.fetchUsers(contextForToast)
   }
 
-//  Box(
-//    modifier = Modifier
-//      .fillMaxSize()
-//      .background(
-//        androidx.compose.ui.graphics.Brush.verticalGradient(
-//          colors = listOf(Color(0xFF83B9E2), Color(0xFFFFFFFF)),
-//          startY = 0f,
-//          endY = Float.POSITIVE_INFINITY,
-//          tileMode = TileMode.Clamp,
-//        )
-//      )
-//  )
 
   Scaffold(
     scaffoldState = scaffoldState,
@@ -133,45 +118,75 @@ fun Home(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
           ) {
-            SearchBar()
-            NamecardView()
-            Text(
-              "Digitize Your Network",
-              fontSize = 24.sp,
-              fontWeight = FontWeight.SemiBold
-            )
+            Box(
+              contentAlignment = Alignment.BottomCenter
+            ) {
+              NamecardView()
+              ProfilePicture()
+            }
 
-            Box {
+            Card(
+              modifier = Modifier
+                .padding(top = 66.dp)
+                .fillMaxWidth(),
+              shape = RoundedCornerShape(8.dp),
+              elevation = 5.dp,
+            ) {
               Column(
-                Modifier
-                  .padding(top = 24.dp)
+                modifier = Modifier
+                  .padding(all = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
               ) {
                 Text(
-                  "Last Activity",
+                  text = "Username",
+                  style = MaterialTheme.typography.subtitle1,
+                )
+                Text(
+                  modifier = Modifier.padding(top = 8.dp),
+                  text = "+62 89923234819",
+                  style = MaterialTheme.typography.subtitle1,
+                )
+              }
+            }
+
+            Box(
+              modifier = Modifier
+                .padding(top = 24.dp)
+            ) {
+              Column(
+                Modifier
+                  .fillMaxSize()
+              ) {
+                Text(
+                  "Company",
                   fontSize = 14.sp,
                   fontWeight = FontWeight.Medium
                 )
                 Spacer(Modifier.height(16.dp))
 
                 LazyColumn(
-//                  modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(16.dp),
-                  verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+                  modifier = Modifier
+                    .fillMaxSize(),
+                  verticalArrangement = Arrangement.Center,
                   state = scrollState
                 ) {
-                  if (users.isEmpty())
-                  {
-                    item {
-                      Text(
-                        text = "Anda belum pernah menyimpan 1 pun kontak",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                      )
-                    }
+                  item {
+                    DetailHead()
                   }
-                  items(users) { user ->
-                    CardListItem(user = user, contextForToast = contextForToast)
+                  items(5) {
+                    DetailItems()
+                  }
+                  item {
+                    Divider(
+                      modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                        .height(24.dp)
+                        .clip(shape = RoundedCornerShape(bottomStart = 8.dp,
+                          bottomEnd = 8.dp)),
+                      color = Color.White.copy(alpha = ContentAlpha.high)
+                    )
                   }
                 }
               }
@@ -185,6 +200,12 @@ fun Home(
 
 @Preview(showBackground = true)
 @Composable
-fun HomePreview() {
-
+fun ProfileView()
+{
+  val navController = rememberNavController()
+  val viewModel =
+    ProfileViewModel() // Provide a mock or dummy implementation of HomeViewModel
+  DiNa_ComposeTheme(darkTheme = false) {
+    Profile(navController = navController, viewModel = viewModel)
+  }
 }

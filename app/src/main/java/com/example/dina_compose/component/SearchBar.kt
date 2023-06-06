@@ -43,7 +43,6 @@ fun SearchBar()
   Surface(
     Modifier
       .padding(top = 16.dp)
-      .padding(horizontal = 16.dp)
       .fillMaxWidth(),
     shape = RoundedCornerShape(8.dp),
     color = Color.White.copy(alpha = ContentAlpha.disabled)

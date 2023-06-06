@@ -1,6 +1,7 @@
 package com.example.dina_compose
 
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,9 @@ import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
     setContent {
       DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
         // 'background' color from the theme

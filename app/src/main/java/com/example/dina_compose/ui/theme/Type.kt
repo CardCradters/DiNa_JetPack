@@ -1,4 +1,5 @@
 package com.example.dina_compose.ui.theme
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.material.Typography
@@ -65,7 +66,7 @@ fun PreviewText()
 
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun TextPreview()
 {
