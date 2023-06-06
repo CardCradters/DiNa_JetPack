@@ -46,7 +46,7 @@ fun BottomSheet(
           ListItem(
             modifier = Modifier.clickable {
               viewModel.signOut {
-                // Callback function after successful logout
+                navController.navigate("login_screen")
                 Toast.makeText(contextForToast, "Logout successful", Toast.LENGTH_SHORT).show()
               }
             },
