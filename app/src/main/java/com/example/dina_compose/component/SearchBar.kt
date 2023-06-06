@@ -29,10 +29,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.dina_compose.screen.home.HomeViewModel
 import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
-fun SearchBar()
+fun SearchBar(onSearch: (String) -> Unit)
 {
   var value by remember {
     mutableStateOf("")
@@ -50,8 +51,8 @@ fun SearchBar()
   ) {
     TextField(
       value = value,
-      onValueChange = { newText ->
-        value = newText
+      onValueChange = { newValue ->
+        value = newValue
       },
       leadingIcon = {
         Icon(
@@ -80,15 +81,14 @@ fun SearchBar()
       ),
       keyboardActions = KeyboardActions(
         onSearch = {
-//          TODO Search Actions >=> >=> >=> >=> >=> >=> >=> >=> >=>
           focusManager.clearFocus()
-
-          Toast.makeText(
-            context,
-            "On Search Click: value = $value",
-            Toast.LENGTH_SHORT
-          )
-            .show()
+          onSearch(value)
+//          Toast.makeText(
+//            context,
+//            "On Search Click: value = $value",
+//            Toast.LENGTH_SHORT
+//          )
+//            .show()
         }
       ),
       colors = TextFieldDefaults.textFieldColors(
@@ -102,11 +102,11 @@ fun SearchBar()
   }
 }
 
-@Preview
-@Composable
-fun SearchBarPreview()
-{
-  DiNa_ComposeTheme(darkTheme = false) {
-    SearchBar()
-  }
-}
+//@Preview
+//@Composable
+//fun SearchBarPreview()
+//{
+//  DiNa_ComposeTheme(darkTheme = false) {
+//    SearchBar()
+//  }
+//}

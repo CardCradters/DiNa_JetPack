@@ -12,7 +12,7 @@ data class UserRequest(
   @SerializedName("workplace")
   val workplace: String,
   @SerializedName("stared")
-  val stared: String,
+  val stared: Boolean,
   @SerializedName("filename")
   val filename: String,
   @SerializedName("storagePath")

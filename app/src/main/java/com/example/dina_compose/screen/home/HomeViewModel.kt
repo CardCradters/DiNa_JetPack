@@ -8,16 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.dina_compose.api.ApiConfig
 import com.example.dina_compose.common.DataState
 import com.example.dina_compose.common.safeApiCall
+import com.example.dina_compose.data.RegisRequest
 import com.example.dina_compose.data.UserRequest
-import com.example.dina_compose.data.UserResponse
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 class HomeViewModel(
 
@@ -26,6 +23,11 @@ class HomeViewModel(
   val users: StateFlow<List<UserRequest>> = _users
   private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
+  private val _searchResults = MutableStateFlow<List<UserRequest>>(emptyList())
+  val searchResult: StateFlow<List<UserRequest>> = _searchResults
+
+  private val _stared = MutableStateFlow<List<UserRequest>>(emptyList())
+  val stared: StateFlow<List<UserRequest>> = _stared
 
   fun fetchUsers(context: Context) = viewModelScope.launch {
     when (val result = safeApiCall { ApiConfig.apiService(context).getUsers() }) {
@@ -42,4 +44,29 @@ class HomeViewModel(
     firebaseAuth.signOut()
     callback()
   }
+
+  fun performSearch(context: Context, query: String) = viewModelScope.launch {
+    when (val result = safeApiCall { ApiConfig.apiService(context).search(query)}) {
+      DataState.Loading -> Unit
+      is DataState.Error -> Log.e("salah", result.message)
+      is DataState.Result -> {
+        _searchResults.tryEmit(result.data.payload.datas)
+      }
+    }
+  }
+
+  fun starred(context: Context,uid: String,isStared: Boolean ) = viewModelScope
+    .launch{
+      val userRequest = UserRequest(uid, "", "", "", isStared, "", "", emptyList())
+    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid,userRequest)
+    }) {
+      DataState.Loading -> Unit
+      is DataState.Error -> Log.e("salah", result.message)
+      is DataState.Result -> {
+        _stared.tryEmit(result.data.payload.datas)
+      }
+    }
+  }
+
+
 }

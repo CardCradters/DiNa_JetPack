@@ -28,15 +28,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dina_compose.R
 import com.example.dina_compose.data.UserRequest
+import com.example.dina_compose.screen.home.HomeViewModel
 
 @Composable
-fun CardListItem(user: UserRequest, contextForToast: Context)
+fun ClickableIcon(
+  isStared: Boolean,
+  onClick: () -> Unit
+) {
+  Icon(
+    painter = painterResource(id = if (isStared) R.drawable.baseline_star_outline_24 else R.drawable
+      .baseline_star_25),
+    contentDescription = "Star",
+    modifier = Modifier.clickable { onClick() }
+  )
+}
+
+@Composable
+fun CardListItem(user: UserRequest, context: Context, viewModel: HomeViewModel)
 {
   Card(
     Modifier
       .clickable {
         Toast
-          .makeText(contextForToast, "Card List Clicked", Toast.LENGTH_SHORT)
+          .makeText(context, "Card List Clicked", Toast.LENGTH_SHORT)
           .show()
       }
       .wrapContentHeight()
@@ -90,13 +104,16 @@ fun CardListItem(user: UserRequest, contextForToast: Context)
           )
         }
       }
-      Icon(
-        painter = painterResource(id = R.drawable.baseline_star_outline_24),
-        contentDescription = "Star"
-      )
+      ClickableIcon(
+        isStared = user.stared
+      ) {
+        viewModel.starred(context, user.uid, !user.stared)
+      }
     }
-  }
 }
+
+}
+
 
 @Composable
 fun CardListItemPreview()
