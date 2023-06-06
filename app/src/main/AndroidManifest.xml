@@ -19,6 +19,7 @@
         android:label = "@string/app_name"
         android:roundIcon = "@mipmap/ic_launcher_round"
         android:supportsRtl = "true"
+        android:screenOrientation="portrait"
         android:enableOnBackInvokedCallback="true"
         android:theme = "@style/Theme.DiNa_Compose"
         tools:targetApi = "31">

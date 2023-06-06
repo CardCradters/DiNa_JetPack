@@ -30,7 +30,7 @@ fun NamecardView()
 {
   Card(
     modifier = Modifier
-      .padding(all = 16.dp)
+      .padding(vertical = 16.dp)
       .aspectRatio(328f / 207f),
     shape = RoundedCornerShape(20.dp),
     elevation = 5.dp
