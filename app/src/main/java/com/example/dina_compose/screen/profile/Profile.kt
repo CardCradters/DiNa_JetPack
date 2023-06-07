@@ -194,22 +194,22 @@ fun ProfileScreen(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileView()
-{
-  val navController = rememberNavController()
-  val viewModel = HomeViewModel()
-
-  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
-    // 'background' color from the theme
-    Surface(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(brush = verticalGradientBrush),
-      color = Color.Transparent,
-    ) {
-      ProfileScreen(navController = navController, viewModel = viewModel)
-    }
-  }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfileView()
+//{
+//  val navController = rememberNavController()
+//  val viewModel = HomeViewModel()
+//
+//  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
+//    // 'background' color from the theme
+//    Surface(
+//      modifier = Modifier
+//        .fillMaxSize()
+//        .background(brush = verticalGradientBrush),
+//      color = Color.Transparent,
+//    ) {
+//      ProfileScreen(navController = navController, viewModel = viewModel)
+//    }
+//  }
+//}
