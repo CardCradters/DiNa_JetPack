@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -76,7 +77,14 @@ fun Home(
 
   Scaffold(
     scaffoldState = scaffoldState,
-    modifier = Modifier.background(Brush),
+    modifier = Modifier.background(
+      androidx.compose.ui.graphics.Brush.horizontalGradient(
+        colors = listOf(
+          Color(0xFF83B9E2),
+          Color(0xFFFFFFFF)
+        )
+      )
+    ),
     topBar = {
       TopAppBar {
         coroutineScope.launch {
@@ -106,7 +114,6 @@ fun Home(
         )
       },
       content = {
-        //    Activity
         Column(
           modifier = Modifier.padding(innerPadding),
           verticalArrangement = Arrangement.Center,
@@ -115,12 +122,10 @@ fun Home(
           Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-          ) {
+          ){
             SearchBar(onSearch = { query ->
               queryState = query
-              viewModel.performSearch(context, query) // Call performSearch in the
-            // view
-            // model
+              viewModel.performSearch(context, query) // Call performSearch
             })
             NamecardView()
             Text(
@@ -128,8 +133,6 @@ fun Home(
               fontSize = 24.sp,
               fontWeight = FontWeight.SemiBold
             )
-
-
             Box {
               Column(
                 Modifier
@@ -146,8 +149,9 @@ fun Home(
                 LazyColumn(
                   modifier = Modifier
                     .fillMaxSize()
+                    .size(30.dp)
                     .padding(16.dp),
-                  verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+                  verticalArrangement = Arrangement.spacedBy(space = 10.dp),
                   state = scrollState
                 ) {
                   if (users.isEmpty() && queryState.isEmpty()) {

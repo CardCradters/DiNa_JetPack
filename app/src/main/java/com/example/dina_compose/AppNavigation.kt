@@ -11,7 +11,8 @@ import com.example.dina_compose.screen.home.Home
 import com.example.dina_compose.screen.splash.SplashScreen
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation()
+{
   val navController = rememberNavController()
 
   NavHost(navController = navController, startDestination = "splash_screen") {
@@ -30,6 +31,9 @@ fun AppNavigation() {
     composable("about") {
       about()
     }
+//    composable("profile_screen") {
+//      Profile(profiles = profiles, navController = navController)
+//    }
   }
 
 }

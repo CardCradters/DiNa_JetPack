@@ -1,5 +1,6 @@
 package com.example.dina_compose.api
 
+import com.example.dina_compose.data.ProfileResponse
 import com.example.dina_compose.data.RegisRequest
 import com.example.dina_compose.data.RegisResponse
 import com.example.dina_compose.data.UserRequest
@@ -17,6 +18,9 @@ interface ApiService
 
   @GET("v1/homepage/{id}")
   suspend fun search(@Path("id") id: String): Response<UserResponse>
+
+  @GET("v1/profile")
+  suspend fun profile(): Response<ProfileResponse>
 
   @POST("v1/auth/signup")
   suspend fun registerUser(

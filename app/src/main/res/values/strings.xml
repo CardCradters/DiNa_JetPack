@@ -1,5 +1,5 @@
 <resources>
-    <string name = "app_name">DiNa_Compose</string>
+    <string name="app_name">DiNa_Compose</string>
     <string name="star">star</string>
     <string name="desc_regis">Create account by filling the form below or scan your namecard.</string>
     <string name="enter_Name">Username</string>

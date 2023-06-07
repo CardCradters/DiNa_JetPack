@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dina_compose.api.ApiConfig
 import com.example.dina_compose.common.DataState
 import com.example.dina_compose.common.safeApiCall
+import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.data.RegisRequest
 import com.example.dina_compose.data.UserRequest
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +29,9 @@ class HomeViewModel(
 
   private val _stared = MutableStateFlow<List<UserRequest>>(emptyList())
   val stared: StateFlow<List<UserRequest>> = _stared
+
+  private val _profile = MutableStateFlow<List<ProfileRequest>>(emptyList())
+  val profile: StateFlow<List<ProfileRequest>> = _profile
 
   fun fetchUsers(context: Context) = viewModelScope.launch {
     when (val result = safeApiCall { ApiConfig.apiService(context).getUsers() }) {
@@ -55,18 +59,43 @@ class HomeViewModel(
     }
   }
 
-  fun starred(context: Context,uid: String,isStared: Boolean ) = viewModelScope
-    .launch{
-      val userRequest = UserRequest(uid, "", "", "", isStared, "", "", emptyList())
-    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid,userRequest)
-    }) {
+  fun starred(context: Context, uid: String, isStarred: Boolean) = viewModelScope.launch {
+    val userRequest = UserRequest(
+      uid = uid,
+      name = "",
+      job_title = "",
+      workplace = "",
+      stared = isStarred,
+      filename = "",
+      storagePath = "",
+      users = emptyList()
+    )
+
+    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid, userRequest) }) {
       DataState.Loading -> Unit
       is DataState.Error -> Log.e("salah", result.message)
       is DataState.Result -> {
-        _stared.tryEmit(result.data.payload.datas)
+        // Handle the result accordingly
+        if (result.data.payload?.datas != null) {
+          // Update the stared list with the updated data
+          _stared.tryEmit(result.data.payload.datas)
+        } else {
+          // Handle the case when the payload or datas are null
+          Log.e("salah", "No Saved User")
+        }
       }
     }
   }
 
+
+  fun fetchProfile(context: Context) = viewModelScope.launch {
+    when (val result = safeApiCall { ApiConfig.apiService(context).profile() }) {
+      DataState.Loading -> Unit
+      is DataState.Error -> Log.e("salah", result.message)
+      is DataState.Result -> {
+        _profile.tryEmit(result.data.payloadx.datas)
+      }
+    }
+  }
 
 }

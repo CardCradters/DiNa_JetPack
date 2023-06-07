@@ -1,6 +1,5 @@
 package com.example.dina_compose.screen.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,50 +32,50 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.dina_compose.BottomBar
-import com.example.dina_compose.BottomSheet
+import com.example.dina_compose.component.BottomBar
+import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.DetailHead
 import com.example.dina_compose.component.DetailItems
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.ProfilePicture
 import com.example.dina_compose.component.TopAppBar
-import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
+import com.example.dina_compose.data.ProfileRequest
+import com.example.dina_compose.screen.home.HomeViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Profile(
+fun Profile(profiles: ProfileRequest,
   navController: NavHostController,
-  viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+  viewModel: HomeViewModel = viewModel()
 )
 {
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  val brush =
-    androidx.compose.ui.graphics.Brush.linearGradient(
-      listOf(
-        Color(0xFF83B9E2),
-        Color(0xFFFFFFFF)
-      )
-    )
   val contextForToast = LocalContext.current
   val scrollState = rememberLazyListState()
-  val users by viewModel.users.collectAsState(emptyList())
+  val profile by viewModel.users.collectAsState(emptyList())
 
   LaunchedEffect(Unit) {
-    viewModel.fetchUsers(contextForToast)
+    viewModel.fetchProfile(contextForToast)
   }
 
 
   Scaffold(
     scaffoldState = scaffoldState,
-    modifier = Modifier.background(brush),
+//    modifier = Modifier.background(
+//      Brush.horizontalGradient(
+//        colors = listOf(
+//          Color(0xFF83B9E2),
+//          Color(0xFFFFFFFF)
+//        )
+//      )
+//    ),
     topBar = {
       TopAppBar {
         coroutineScope.launch {
@@ -91,7 +90,7 @@ fun Profile(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast)
+      BottomBar(navController = navController,contextForToast = contextForToast)
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -103,6 +102,8 @@ fun Profile(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
           contextForToast = contextForToast,
+          navController = navController,
+          viewModel = viewModel
         )
       },
       content = {
@@ -139,12 +140,12 @@ fun Profile(
                 verticalArrangement = Arrangement.Center,
               ) {
                 Text(
-                  text = "Username",
+                  text = profiles.name,
                   style = MaterialTheme.typography.subtitle1,
                 )
                 Text(
                   modifier = Modifier.padding(top = 8.dp),
-                  text = "+62 89923234819",
+                  text = profiles.phoneNumber,
                   style = MaterialTheme.typography.subtitle1,
                 )
               }
@@ -159,7 +160,7 @@ fun Profile(
                   .fillMaxSize()
               ) {
                 Text(
-                  "Company",
+                  profiles.workplace,
                   fontSize = 14.sp,
                   fontWeight = FontWeight.Medium
                 )
@@ -175,7 +176,12 @@ fun Profile(
                     DetailHead()
                   }
                   items(5) {
-                    DetailItems()
+                    DetailItems(value = "", // Pass the appropriate value from the profile data
+                      onValueChange = { Value ->
+                        // Update the value in the view model
+                        viewModel.fetchProfile(contextForToast)
+                      }
+                    )
                   }
                   item {
                     Divider(
@@ -198,14 +204,3 @@ fun Profile(
   }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileView()
-{
-  val navController = rememberNavController()
-  val viewModel =
-    ProfileViewModel() // Provide a mock or dummy implementation of HomeViewModel
-  DiNa_ComposeTheme(darkTheme = false) {
-    Profile(navController = navController, viewModel = viewModel)
-  }
-}

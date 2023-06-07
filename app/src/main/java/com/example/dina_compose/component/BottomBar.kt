@@ -24,7 +24,7 @@ fun BottomBar(navController: NavHostController, contextForToast: Context)
 {
   // items list
   val bottomMenuItemsList = prepareBottomMenu()
-  var selectedItem by remember { mutableStateOf("Home") }
+  var selectedItem by remember { mutableStateOf("home_screen") }
 
   BottomNavigation(
     backgroundColor = MaterialTheme.colors.background,
@@ -35,7 +35,11 @@ fun BottomBar(navController: NavHostController, contextForToast: Context)
         onClick = {
           selectedItem = menuItem.label
           Toast.makeText(contextForToast, menuItem.label, Toast.LENGTH_SHORT).show()
-          navController.navigate(menuItem.label)
+          when (menuItem.label) {
+            "Home" -> navController.navigate("home_screen")
+            "Profile" -> navController.navigate("profile_screen")
+            else -> Unit
+          }
         },
         icon = {
           Icon(painter = menuItem.icon, contentDescription = menuItem.label)
@@ -72,11 +76,3 @@ private fun prepareBottomMenu(): List<BottomMenuItem>
 
 data class BottomMenuItem(val label: String, val icon: Painter)
 
-//@Preview()
-//@Composable
-//fun BottomBarPreview()
-//{
-//  DiNa_ComposeTheme(darkTheme = false) {
-//    BottomBar(contextForToast = LocalContext.current.applicationContext)
-//  }
-//}

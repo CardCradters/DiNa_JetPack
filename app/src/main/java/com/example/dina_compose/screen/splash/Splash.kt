@@ -61,23 +61,16 @@ fun SplashScreen(
         .fillMaxWidth()
         .height(508.dp)
     )
-    Button(
-      onClick = {
-        navController.navigate("login_screen")
-      },
-      colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
-      modifier = Modifier
-        .align(Alignment.CenterHorizontally)
-        .padding(top = 16.dp)
-    ) {
-    Text(text = "Let's Start")
-    }
+//    Button(
+//      onClick = {
+//        navController.navigate("login_screen")
+//      },
+//      colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
+//      modifier = Modifier
+//        .align(Alignment.CenterHorizontally)
+//        .padding(top = 16.dp)
+//    ) {
+//    Text(text = "Let's Start")
+//    }
   }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun SplashView(){
-//  val navController = NavHostController
-//  SplashScreen()
-//}
