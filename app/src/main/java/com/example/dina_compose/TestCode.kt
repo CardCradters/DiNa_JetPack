@@ -1,4 +1,4 @@
-package com.example.dina_compose.component
+package com.example.dina_compose
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -55,12 +54,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.dina_compose.R
+import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 import com.example.dina_compose.ui.theme.verticalGradientBrush
 
 @Composable
-fun Profile()
+fun TestCode()
 {
   val placeholders = listOf("Email", "Telephone", "FAX", "Mobile", "Website")
   val scrollState = rememberLazyListState()
@@ -233,6 +232,7 @@ fun DetailHead(times: Int, placeholderTexts: List<String>)
         .offset(y = (-16).dp),
       textStyle = MaterialTheme.typography.subtitle1
         .copy(textAlign = TextAlign.Center),
+      singleLine = true,
       placeholder = {
         Text(
           text = "Office Address",
@@ -260,6 +260,7 @@ fun DetailHead(times: Int, placeholderTexts: List<String>)
     )
 
 
+
     repeat(times) { index ->
       var itemValue by remember { mutableStateOf("") }
 
@@ -276,9 +277,7 @@ fun DetailHead(times: Int, placeholderTexts: List<String>)
           }
         },
         shape = RoundedCornerShape(0.dp),
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxWidth(),
         textStyle = MaterialTheme.typography.subtitle1.copy(
           textAlign = TextAlign
             .End
@@ -325,12 +324,6 @@ fun DetailHead(times: Int, placeholderTexts: List<String>)
         thickness = 0.5.dp
       )
     }
-    Divider(
-      modifier = Modifier
-        .fillMaxWidth()
-        .heightIn(60.dp),
-      color = Color.Transparent
-    )
   }
 }
 
@@ -346,7 +339,7 @@ fun TestCodeView()
         .background(brush = verticalGradientBrush),
       color = Color.Transparent,
     ) {
-      Profile()
+      TestCode()
     }
   }
 }

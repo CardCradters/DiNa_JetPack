@@ -2,14 +2,14 @@ package com.example.dina_compose.screen.splash
 
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,7 +42,8 @@ fun SplashScreen(
   Column(
     modifier = Modifier
       .fillMaxSize()
-      .padding(horizontal = 24.dp)
+      .padding(horizontal = 24.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Text(
       text = "Welcome in DiNa",
@@ -51,7 +51,6 @@ fun SplashScreen(
       fontSize = 30.sp,
       fontWeight = FontWeight.Bold,
       modifier = Modifier
-        .align(Alignment.Start)
         .padding(top = 38.dp)
     )
     Image(
@@ -59,18 +58,24 @@ fun SplashScreen(
       contentDescription = "Image",
       modifier = Modifier
         .fillMaxWidth()
-        .height(508.dp)
+        .aspectRatio(3f / 4f)
     )
     Button(
       onClick = {
         navController.navigate("login_screen")
       },
-      colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
+      colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
       modifier = Modifier
-        .align(Alignment.CenterHorizontally)
         .padding(top = 16.dp)
+        .width(240.dp)
+        .height(44.dp),
     ) {
-    Text(text = "Let's Start")
+    Text(
+      text = "Let's Start",
+      style = MaterialTheme.typography.subtitle1,
+      fontWeight = FontWeight.Bold,
+      color = Color.Black
+    )
     }
   }
 }

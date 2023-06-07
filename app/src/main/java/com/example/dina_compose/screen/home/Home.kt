@@ -1,6 +1,5 @@
 package com.example.dina_compose.screen.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +42,7 @@ import com.example.dina_compose.component.CardListItem
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.ui.theme.verticalGradientBrush
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -55,17 +54,13 @@ fun Home(
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  val Brush =
-    androidx.compose.ui.graphics.Brush.linearGradient(
-      listOf(
-        Color(0xFF83B9E2),
-        Color(0xFFFFFFFF)
-      )
-    )
+  val brush = verticalGradientBrush
+
   val context = LocalContext.current
   val scrollState = rememberLazyListState()
   val users by viewModel.users.collectAsState(emptyList())
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
+
   var queryState by remember { mutableStateOf("") }
 
 
@@ -76,7 +71,7 @@ fun Home(
 
   Scaffold(
     scaffoldState = scaffoldState,
-    modifier = Modifier.background(Brush),
+//    modifier = Modifier.background(brush),
     topBar = {
       TopAppBar {
         coroutineScope.launch {
@@ -108,7 +103,9 @@ fun Home(
       content = {
         //    Activity
         Column(
-          modifier = Modifier.padding(innerPadding),
+          modifier = Modifier
+            .padding(innerPadding)
+            .padding(horizontal = 24.dp),
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -129,11 +126,10 @@ fun Home(
               fontWeight = FontWeight.SemiBold
             )
 
-
             Box {
               Column(
                 Modifier
-                  .padding(all = 16.dp)
+                  .padding(top = 24.dp)
                   .fillMaxSize()
               ) {
                 Text(
@@ -145,8 +141,7 @@ fun Home(
 
                 LazyColumn(
                   modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                   verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                   state = scrollState
                 ) {

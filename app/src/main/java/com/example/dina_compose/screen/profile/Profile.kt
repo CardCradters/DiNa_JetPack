@@ -14,22 +14,18 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.Card
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -38,21 +34,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.dina_compose.BottomBar
-import com.example.dina_compose.BottomSheet
+import com.example.dina_compose.component.BottomBar
+import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.DetailHead
-import com.example.dina_compose.component.DetailItems
 import com.example.dina_compose.component.NamecardView
-import com.example.dina_compose.component.ProfilePicture
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.screen.home.HomeViewModel
 import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
+import com.example.dina_compose.ui.theme.verticalGradientBrush
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Profile(
+fun ProfileScreen(
   navController: NavHostController,
-  viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+  viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 )
 {
   val scaffoldState = rememberScaffoldState()
@@ -67,7 +63,9 @@ fun Profile(
     )
   val contextForToast = LocalContext.current
   val scrollState = rememberLazyListState()
-  val users by viewModel.users.collectAsState(emptyList())
+//  val users by viewModel.users.collectAsState(emptyList())
+
+  val placeholders = listOf("Email", "Telephone", "FAX", "Mobile", "Website")
 
   LaunchedEffect(Unit) {
     viewModel.fetchUsers(contextForToast)
@@ -91,18 +89,20 @@ fun Profile(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast)
+      BottomBar(navController = navController,contextForToast = contextForToast)
     },
   ) { innerPadding ->
     BottomSheetScaffold(
       scaffoldState = sheetState,
-      sheetBackgroundColor = MaterialTheme.colors.background,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
       sheetContent = {
         BottomSheet(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
           contextForToast = contextForToast,
+          navController = navController,
+          viewModel = viewModel
         )
       },
       content = {
@@ -119,12 +119,12 @@ fun Profile(
             horizontalAlignment = Alignment.CenterHorizontally,
           ) {
             Box(
+              modifier = Modifier,
               contentAlignment = Alignment.BottomCenter
             ) {
               NamecardView()
-              ProfilePicture()
+              com.example.dina_compose.ProfilePicture()
             }
-
             Card(
               modifier = Modifier
                 .padding(top = 66.dp)
@@ -150,43 +150,38 @@ fun Profile(
               }
             }
 
-            Box(
-              modifier = Modifier
+            Column(
+              Modifier
                 .padding(top = 24.dp)
+                .fillMaxSize()
             ) {
-              Column(
-                Modifier
-                  .fillMaxSize()
-              ) {
-                Text(
-                  "Company",
-                  fontSize = 14.sp,
-                  fontWeight = FontWeight.Medium
-                )
-                Spacer(Modifier.height(16.dp))
+              Text(
+                "Company",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+              )
+              Spacer(Modifier.height(16.dp))
 
-                LazyColumn(
-                  modifier = Modifier
-                    .fillMaxSize(),
-                  verticalArrangement = Arrangement.Center,
-                  state = scrollState
-                ) {
-                  item {
-                    DetailHead()
-                  }
-                  items(5) {
-                    DetailItems()
-                  }
-                  item {
-                    Divider(
-                      modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .fillMaxWidth()
-                        .height(24.dp)
-                        .clip(shape = RoundedCornerShape(bottomStart = 8.dp,
-                          bottomEnd = 8.dp)),
-                      color = Color.White.copy(alpha = ContentAlpha.high)
-                    )
+              LazyColumn(
+                modifier = Modifier
+                  .fillMaxSize(),
+                state = scrollState
+              ) {
+                item {
+                  Card(modifier = Modifier
+                    .padding(bottom = 8.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = 5.dp,
+                  ) {
+                    Column(
+                      horizontalAlignment = Alignment.CenterHorizontally,
+                      verticalArrangement = Arrangement.Center,
+                    ) {
+                      DetailHead(
+                        times = 5,
+                        placeholderTexts = placeholders
+                      )
+                    }
                   }
                 }
               }
@@ -198,14 +193,23 @@ fun Profile(
   }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun ProfileView()
 {
   val navController = rememberNavController()
-  val viewModel =
-    ProfileViewModel() // Provide a mock or dummy implementation of HomeViewModel
-  DiNa_ComposeTheme(darkTheme = false) {
-    Profile(navController = navController, viewModel = viewModel)
+  val viewModel = HomeViewModel()
+
+  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
+    // 'background' color from the theme
+    Surface(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(brush = verticalGradientBrush),
+      color = Color.Transparent,
+    ) {
+      ProfileScreen(navController = navController, viewModel = viewModel)
+    }
   }
 }

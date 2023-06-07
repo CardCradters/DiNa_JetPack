@@ -2,7 +2,6 @@ package com.example.dina_compose.component
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,12 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.dina_compose.R
 import com.example.dina_compose.screen.home.HomeViewModel
-import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -39,7 +36,8 @@ fun BottomSheet(
   val bottomSheetItemsList = prepareBottomSheet()
 
   LazyColumn(
-    Modifier.padding(bottom = 56.dp)
+    Modifier
+      .padding(bottom = 56.dp)
   ) {
     items(bottomSheetItemsList) { sheetItem ->
         if (sheetItem.label == "Logout") {
@@ -108,11 +106,7 @@ private fun prepareBottomSheet(): List<BottomSheetItem>
   val bottomSheetItemsList = arrayListOf<BottomSheetItem>()
   // add menu items
   bottomSheetItemsList.add(
-    BottomSheetItem(
-      label = "Settings", icon = painterResource(
-        id = R.drawable.baseline_settings_24
-      )
-    )
+    BottomSheetItem(label = "Settings", icon = painterResource(id = R.drawable.baseline_settings_24))
   )
   bottomSheetItemsList.add(
     BottomSheetItem(label = "About DiNa", icon = painterResource(id = R.drawable.baseline_info_24))
@@ -123,7 +117,6 @@ private fun prepareBottomSheet(): List<BottomSheetItem>
   bottomSheetItemsList.add(
     BottomSheetItem(label = "Logout", icon = painterResource(id = R.drawable.baseline_logout_24))
   )
-
 
   return bottomSheetItemsList
 }
