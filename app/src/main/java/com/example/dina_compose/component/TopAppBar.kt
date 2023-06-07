@@ -22,7 +22,7 @@ fun TopAppBar(onNavigationIconClick: () -> Unit)
         style = MaterialTheme.typography.h1
       )
     },
-    backgroundColor = MaterialTheme.colors.background,
+    backgroundColor = MaterialTheme.colors.primary,
     actions = {
       IconButton(onClick = {
         onNavigationIconClick()

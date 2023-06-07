@@ -12,12 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.dina_compose.R
-import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
 fun BottomBar(navController: NavHostController, contextForToast: Context)
@@ -27,7 +24,7 @@ fun BottomBar(navController: NavHostController, contextForToast: Context)
   var selectedItem by remember { mutableStateOf("home_screen") }
 
   BottomNavigation(
-    backgroundColor = MaterialTheme.colors.background,
+    backgroundColor = MaterialTheme.colors.primary,
   ) {
     bottomMenuItemsList.forEach { menuItem ->
       BottomNavigationItem(
