@@ -89,7 +89,7 @@ fun Home(
   ) { innerPadding ->
     BottomSheetScaffold(
       scaffoldState = sheetState,
-      sheetBackgroundColor = MaterialTheme.colors.background,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
       sheetContent = {
         BottomSheet(
