@@ -1,5 +1,6 @@
 package com.example.dina_compose.api
 
+import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.data.ProfileResponse
 import com.example.dina_compose.data.RegisRequest
 import com.example.dina_compose.data.RegisResponse
@@ -20,7 +21,7 @@ interface ApiService
   suspend fun search(@Path("id") id: String): Response<UserResponse>
 
   @GET("v1/profile")
-  suspend fun profile(): Response<ProfileResponse>
+  suspend fun getProfile(): Response<ProfileResponse>
 
   @POST("v1/auth/signup")
   suspend fun registerUser(
@@ -30,8 +31,8 @@ interface ApiService
   @POST("v1/cardstorage/star/{id}")
   suspend fun starred(
     @Path("id") id: String,
-    @Body userRequest: UserRequest
-  ): Response<UserResponse>
+    @Body profileRequest: ProfileRequest
+  ): Response<ProfileResponse>
 }
 
 

@@ -61,10 +61,3 @@ fun CardProfile(profiles:ProfileRequest){
       )
 }}}
 
-@Preview(showBackground = true)
-@Composable
-fun view(){
-  val profiles = ProfileRequest("","", "",""
-    ,"","","","","","","","","")
-  CardProfile(profiles = profiles)
-}

@@ -17,9 +17,13 @@ import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -33,26 +37,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.dina_compose.BottomBar
-import com.example.dina_compose.BottomSheet
+import com.example.dina_compose.component.BottomBar
+import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.DetailHead
-import com.example.dina_compose.component.DetailItems
 import com.example.dina_compose.component.NamecardView
+import com.example.dina_compose.component.ProfileForm
 import com.example.dina_compose.component.ProfilePicture
 import com.example.dina_compose.component.TopAppBar
-import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
+import com.example.dina_compose.data.ProfileRequest
+import com.example.dina_compose.data.UserRequest
+import com.example.dina_compose.screen.home.HomeViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Profile(
   navController: NavHostController,
-  viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+  viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 )
 {
   val scaffoldState = rememberScaffoldState()
@@ -67,10 +74,11 @@ fun Profile(
     )
   val contextForToast = LocalContext.current
   val scrollState = rememberLazyListState()
-  val users by viewModel.users.collectAsState(emptyList())
+  val profile:ProfileRequest? by viewModel.profile.collectAsState(null)
+  val profiles: MutableStateFlow<ProfileRequest?> = MutableStateFlow(null)
 
   LaunchedEffect(Unit) {
-    viewModel.fetchUsers(contextForToast)
+    viewModel.fetchProfile(contextForToast)
   }
 
 
@@ -79,6 +87,7 @@ fun Profile(
     modifier = Modifier.background(brush),
     topBar = {
       TopAppBar {
+
         coroutineScope.launch {
           if (sheetState.bottomSheetState.isCollapsed)
           {
@@ -91,7 +100,7 @@ fun Profile(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast)
+      BottomBar(contextForToast = contextForToast, navController = navController)
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -102,7 +111,8 @@ fun Profile(
         BottomSheet(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
-          contextForToast = contextForToast,
+          contextForToast = contextForToast,viewModel = viewModel, navController=
+          navController
         )
       },
       content = {
@@ -128,7 +138,7 @@ fun Profile(
             Card(
               modifier = Modifier
                 .padding(top = 66.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth().background(Color(0xFFD1D1D1)),
               shape = RoundedCornerShape(8.dp),
               elevation = 5.dp,
             ) {
@@ -139,16 +149,16 @@ fun Profile(
                 verticalArrangement = Arrangement.Center,
               ) {
                 Text(
-                  text = "Username",
-                  style = MaterialTheme.typography.subtitle1,
+                  profile?.name ?: "",
+                  style = MaterialTheme.typography.subtitle1
                 )
+
                 Text(
+                   profile?.phoneNumber ?: "",
                   modifier = Modifier.padding(top = 8.dp),
-                  text = "+62 89923234819",
-                  style = MaterialTheme.typography.subtitle1,
+                  style = MaterialTheme.typography.subtitle2
                 )
-              }
-            }
+            }}
 
             Box(
               modifier = Modifier
@@ -163,49 +173,95 @@ fun Profile(
                   fontSize = 14.sp,
                   fontWeight = FontWeight.Medium
                 )
-                Spacer(Modifier.height(16.dp))
 
-                LazyColumn(
+                Card(
                   modifier = Modifier
-                    .fillMaxSize(),
-                  verticalArrangement = Arrangement.Center,
-                  state = scrollState
+                    .padding(top = 20.dp)
+                    .fillMaxWidth()
+                    .background(Color(0xFFD1D1D1)),
+                  shape = RoundedCornerShape(8.dp),
+                  elevation = 5.dp,
                 ) {
-                  item {
-                    DetailHead()
-                  }
-                  items(5) {
-                    DetailItems()
-                  }
-                  item {
-                    Divider(
+                  Column(
+                    modifier = Modifier
+                      .padding(all = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                  ) {
+                    (if (profile?.workplace.isNullOrEmpty()) {
+                      "Company"
+                    } else {
+                      profile?.workplace
+                    })?.let { it1 ->
+                      Text(
+                        text = it1,
+                        modifier = Modifier.padding(top = 8.dp),
+                        style = MaterialTheme.typography.subtitle2
+                      )
+                    }
+                    (if (profile?.addressCompany.isNullOrEmpty()) {
+                      "Address Company"
+                    } else {
+                      profile?.addressCompany
+                    })?.let { it1 ->
+                      Text(
+                        text = it1,
+                        modifier = Modifier.padding(top = 8.dp),
+                        style = MaterialTheme.typography.subtitle2
+                      )
+                    }
+                    Column(
                       modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .fillMaxWidth()
-                        .height(24.dp)
-                        .clip(shape = RoundedCornerShape(bottomStart = 8.dp,
-                          bottomEnd = 8.dp)),
-                      color = Color.White.copy(alpha = ContentAlpha.high)
-                    )
-                  }
-                }
+                        .padding(all = 16.dp),
+                    ){
+                      (if (profile?.job_title.isNullOrEmpty()) {
+                        "Job Title"
+                      } else {
+                        profile?.job_title
+                      })?.let { it1 ->
+                        Text(
+                          text = it1,
+                          modifier = Modifier.padding(top = 8.dp),
+                          style = MaterialTheme.typography.subtitle2
+                        )
+                      }
+                      Text(
+                        profile?.email ?: "",
+                        style = MaterialTheme.typography.subtitle1
+                      )
+
+                      (if (profile?.emailCompany.isNullOrEmpty()) {
+                        "Email Company"
+                      } else {
+                        profile?.emailCompany
+                      })?.let { it1 ->
+                        Text(
+                          text = it1,
+                          modifier = Modifier.padding(top = 8.dp),
+                          style = MaterialTheme.typography.subtitle2
+                        )
+                      }
+                      (if (profile?.phoneFaxCompany.isNullOrEmpty()) {
+                        "Phone Fax Company"
+                      } else {
+                        profile?.phoneFaxCompany
+                      })?.let { it1 ->
+                        Text(
+                          text = it1,
+                          modifier = Modifier.padding(top = 8.dp),
+                          style = MaterialTheme.typography.subtitle2
+                        )
+                      }
+
+                    }
+
+                  }}
+
               }
             }
           }
         }
       }
     )
-  }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileView()
-{
-  val navController = rememberNavController()
-  val viewModel =
-    ProfileViewModel() // Provide a mock or dummy implementation of HomeViewModel
-  DiNa_ComposeTheme(darkTheme = false) {
-    Profile(navController = navController, viewModel = viewModel)
   }
 }

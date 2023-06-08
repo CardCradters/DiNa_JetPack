@@ -108,7 +108,9 @@ fun Home(
       content = {
         //    Activity
         Column(
-          modifier = Modifier.padding(innerPadding),
+          modifier = Modifier
+            .padding(innerPadding)
+            .padding(horizontal = 24.dp),
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {

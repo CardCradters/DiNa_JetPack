@@ -3,13 +3,14 @@ package com.example.dina_compose.screen.home
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dina_compose.UserPreference
 import com.example.dina_compose.api.ApiConfig
 import com.example.dina_compose.common.DataState
 import com.example.dina_compose.common.safeApiCall
 import com.example.dina_compose.data.ProfileRequest
-import com.example.dina_compose.data.RegisRequest
 import com.example.dina_compose.data.UserRequest
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,6 @@ import kotlinx.coroutines.launch
 
 
 class HomeViewModel(
-
 ) : ViewModel() {
   private val _users = MutableStateFlow<List<UserRequest>>(emptyList())
   val users: StateFlow<List<UserRequest>> = _users
@@ -27,11 +27,14 @@ class HomeViewModel(
   private val _searchResults = MutableStateFlow<List<UserRequest>>(emptyList())
   val searchResult: StateFlow<List<UserRequest>> = _searchResults
 
-  private val _stared = MutableStateFlow<List<UserRequest>>(emptyList())
-  val stared: StateFlow<List<UserRequest>> = _stared
+//  val context = LocalContext.current
+//  private val userPreference: UserPreference = UserPreference(context)
+  private val _stared = MutableStateFlow<ProfileRequest?>(null)
+  val stared:StateFlow<ProfileRequest?>  = _stared
 
-  private val _profile = MutableStateFlow<List<ProfileRequest>>(emptyList())
-  val profile: StateFlow<List<ProfileRequest>> = _profile
+  private val _profile = MutableStateFlow<ProfileRequest?>(null)
+  val profile: StateFlow<ProfileRequest?> = _profile
+
 
   fun fetchUsers(context: Context) = viewModelScope.launch {
     when (val result = safeApiCall { ApiConfig.apiService(context).getUsers() }) {
@@ -60,7 +63,9 @@ class HomeViewModel(
   }
 
   fun starred(context: Context, uid: String, isStarred: Boolean) = viewModelScope.launch {
-    val userRequest = UserRequest(
+
+
+    val profileRequest = ProfileRequest(
       uid = uid,
       name = "",
       job_title = "",
@@ -68,17 +73,29 @@ class HomeViewModel(
       stared = isStarred,
       filename = "",
       storagePath = "",
-      users = emptyList()
+      password ="",
+      workplaceUri ="",
+      addressCompany ="",
+      emailCompany ="",
+      email ="",
+      phoneMobileCompany ="",
+      phoneFaxCompany ="",
+      phoneTelpCompany ="",
+      phoneNumber ="",
     )
 
-    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid, userRequest) }) {
+    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid, profileRequest)
+    }) {
+
       DataState.Loading -> Unit
       is DataState.Error -> Log.e("salah", result.message)
       is DataState.Result -> {
         // Handle the result accordingly
-        if (result.data.payload?.datas != null) {
+        if (result.data.payloadx?.datas != null) {
           // Update the stared list with the updated data
-          _stared.tryEmit(result.data.payload.datas)
+          _stared.tryEmit(result.data.payloadx.datas)
+
+//          userPreference.saveStared(isStarred)
         } else {
           // Handle the case when the payload or datas are null
           Log.e("salah", "No Saved User")
@@ -89,7 +106,7 @@ class HomeViewModel(
 
 
   fun fetchProfile(context: Context) = viewModelScope.launch {
-    when (val result = safeApiCall { ApiConfig.apiService(context).profile() }) {
+    when (val result = safeApiCall { ApiConfig.apiService(context).getProfile() }) {
       DataState.Loading -> Unit
       is DataState.Error -> Log.e("salah", result.message)
       is DataState.Result -> {

@@ -4,10 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.auth.Login
 import com.example.dina_compose.screen.auth.Register
 import com.example.dina_compose.screen.bottomsheet.about
 import com.example.dina_compose.screen.home.Home
+import com.example.dina_compose.screen.profile.Profile
 import com.example.dina_compose.screen.splash.SplashScreen
 
 @Composable
@@ -31,9 +33,16 @@ fun AppNavigation()
     composable("about") {
       about()
     }
-//    composable("profile_screen") {
-//      Profile(profiles = profiles, navController = navController)
-//    }
+    composable("profile_screen") {
+      Profile(
+        navController = navController
+      )
+    }
   }
-
 }
+//
+//, profiles =
+//ProfileRequest(
+//"", "", "", "", "", "", "",
+//"", "", "", "", "", ""
+//)

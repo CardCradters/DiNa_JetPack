@@ -7,13 +7,15 @@ data class ProfileRequest(
   val uid: String,
   @SerializedName("name")
   val name: String,
-  @SerializedName("password")
-  val password: String,
+  @SerializedName("phoneNumber")
+  val phoneNumber: String,
   @SerializedName("job_title")
-  val jobTitle: String,
+  val job_title: String,
   @SerializedName("workplace")
   val workplace: String,
-  @SerializedName("workplace_uri")
+  @SerializedName("password")
+  val password: String,
+  @SerializedName("workplaceUri")
   val workplaceUri: String,
   @SerializedName("addressCompany")
   val addressCompany: String,
@@ -21,12 +23,16 @@ data class ProfileRequest(
   val emailCompany: String,
   @SerializedName("email")
   val email: String,
-  @SerializedName("phoneNumber")
-  val phoneNumber: String,
   @SerializedName("phoneMobileCompany")
   val phoneMobileCompany: String,
   @SerializedName("phoneFaxCompany")
   val phoneFaxCompany: String,
   @SerializedName("phoneTelpCompany")
   val phoneTelpCompany: String,
+  @SerializedName("stared")
+  val stared: Boolean,
+  @SerializedName("filename")
+  val filename: String,
+  @SerializedName("storagePath")
+  val storagePath: String,
   )

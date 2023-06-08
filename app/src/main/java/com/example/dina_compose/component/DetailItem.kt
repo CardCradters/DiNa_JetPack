@@ -7,22 +7,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -33,74 +28,75 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dina_compose.data.ProfileRequest
 
 @Composable
-fun DetailItems(value: String, onValueChange: (String) -> Unit)
-{
-  var value by remember { mutableStateOf("") }
+fun DetailItems(profile: List<ProfileRequest>, onValueChange: (ProfileRequest) -> Unit) {
   val context = LocalContext.current.applicationContext
   val focusManager = LocalFocusManager.current
 
-  BasicTextField(
-    value = value,
-    onValueChange = onValueChange,
-    textStyle = TextStyle(
-      fontSize = 20.sp,
-      fontWeight = FontWeight.Medium,
-      textAlign = TextAlign.End
-    ),
-    singleLine = true,
-    decorationBox = { innerTextField ->
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-//        Icon(
-//          Icons.Default.Search,
-//          contentDescription = "Search"
-//        )
-        Box(
-          modifier = Modifier,
-          contentAlignment = Alignment.CenterEnd
-        ) {
-          if (value.isEmpty())
-          {
-            Text(
-              text = value,
-              textAlign = TextAlign.End
-            )
-          }
-          innerTextField()
-        }
-      }
-    },
-    keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Text,
-      imeAction = ImeAction.Done
-    ),
-    keyboardActions = KeyboardActions(
-      onDone = {
-//          TODO Update Actions >=> >=> >=> >=> >=> >=> >=> >=> >=>
-        focusManager.clearFocus()
-
-        Toast.makeText(
-          context,
-          "On Done Click: value = $value",
-          Toast.LENGTH_SHORT
+  profile.forEach { request ->
+    LazyColumn {
+      item {
+        BasicTextField(
+          value = request.job_title,
+          onValueChange = { newJobTitle ->
+            onValueChange(request.copy(job_title = newJobTitle))
+          },
+          singleLine = true,
+          keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+          ),
+          keyboardActions = KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+          ),
+          modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .padding(8.dp)
         )
-          .show()
       }
-    ),
-    modifier = Modifier
-      .background(color = Color.White.copy(alpha = ContentAlpha.high))
-      .padding(top = 8.dp)
-  )
-  Divider(
-    modifier = Modifier.fillMaxWidth(),
-    color = Color.Black,
-    thickness = 0.5.dp
-  )
+      item {
+        BasicTextField(
+          value = request.workplaceUri,
+          onValueChange = { newWorkplaceUri ->
+            onValueChange(request.copy(workplaceUri = newWorkplaceUri))
+          },
+          singleLine = true,
+          keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+          ),
+          keyboardActions = KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+          ),
+          modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .padding(8.dp)
+        )
+      }
+      item {
+        BasicTextField(
+          value = request.email,
+          onValueChange = { newEmail ->
+            onValueChange(request.copy(email = newEmail))
+          },
+          singleLine = true,
+          keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+          ),
+          keyboardActions = KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+          ),
+          modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .padding(8.dp)
+        )
+      }
+    }
+  }
 }
