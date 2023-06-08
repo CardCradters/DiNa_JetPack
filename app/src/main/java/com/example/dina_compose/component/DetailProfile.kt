@@ -173,7 +173,8 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>, viewModel:HomeView
           {
             Icon(
               painter = icons[index],
-              contentDescription = null
+              contentDescription = null,
+              tint = Color.Black
             )
           }
         },
