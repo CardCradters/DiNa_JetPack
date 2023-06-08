@@ -156,7 +156,8 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>)
           {
             Icon(
               painter = icons[index],
-              contentDescription = null
+              contentDescription = null,
+              tint = Color.Black
             )
           }
         },
