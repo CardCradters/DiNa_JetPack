@@ -23,6 +23,9 @@ interface ApiService
   @GET("v1/profile")
   suspend fun getProfile(): Response<ProfileResponse>
 
+  @POST("v1/upload")
+  suspend fun postUpload(): Response<ProfileResponse>
+
   @POST("v1/auth/signup")
   suspend fun registerUser(
     @Body registerRequest: RegisRequest

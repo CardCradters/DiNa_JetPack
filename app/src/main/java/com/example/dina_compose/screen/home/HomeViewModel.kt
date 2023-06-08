@@ -2,8 +2,11 @@ package com.example.dina_compose.screen.home
 
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dina_compose.UserPreference
@@ -34,6 +37,8 @@ class HomeViewModel(
 
   private val _profile = MutableStateFlow<ProfileRequest?>(null)
   val profile: StateFlow<ProfileRequest?> = _profile
+
+
 
 
   fun fetchUsers(context: Context) = viewModelScope.launch {
@@ -114,5 +119,7 @@ class HomeViewModel(
       }
     }
   }
+
+
 
 }
