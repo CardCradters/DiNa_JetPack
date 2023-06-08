@@ -39,89 +39,107 @@ fun BottomSheet(
   val bottomSheetItemsList = prepareBottomSheet()
 
   LazyColumn(
-    Modifier.padding(bottom = 56.dp)
+    Modifier
+      .padding(bottom = 56.dp)
+      .padding(top = 20.dp)
   ) {
     items(bottomSheetItemsList) { sheetItem ->
-        if (sheetItem.label == "Logout") {
-          ListItem(
-            modifier = Modifier.clickable {
-              viewModel.signOut {
-                navController.navigate("login_screen")
-                Toast.makeText(contextForToast, "Logout successful", Toast.LENGTH_SHORT).show()
-              }
-            },
-            text = {
-              Text(text = sheetItem.label)
-            },
-            icon = {
-              Icon(
-                painter = sheetItem.icon,
-                contentDescription = sheetItem.label
-              )
+      if (sheetItem.label == "Logout")
+      {
+        ListItem(
+          modifier = Modifier.clickable {
+            viewModel.signOut {
+              navController.navigate("login_screen")
+              Toast.makeText(
+                contextForToast,
+                "Logout successful",
+                Toast.LENGTH_SHORT
+              ).show()
             }
-          )
-        } else if (sheetItem.label == "About DiNa") {
-          ListItem(
-            modifier = Modifier.clickable {
-              navController.navigate("about") // Navigate to the "About" screen
-              coroutineScope.launch {
-                scaffoldState.bottomSheetState.collapse()
-              }
-            },
-            text = {
-              Text(text = sheetItem.label)
-            },
-            icon = {
-              Icon(
-                painter = sheetItem.icon,
-                contentDescription = sheetItem.label
-              )
-            }
-          )
-        }
-        else {
-      ListItem(
-        modifier = Modifier.clickable {
-          Toast.makeText(contextForToast, "Item ", Toast.LENGTH_SHORT).show()
-
-          coroutineScope.launch {
-            scaffoldState.bottomSheetState.collapse()
+          },
+          text = {
+            Text(text = sheetItem.label)
+          },
+          icon = {
+            Icon(
+              painter = sheetItem.icon,
+              contentDescription = sheetItem.label
+            )
           }
-        },
-        text = {
-          Text(text = sheetItem.label)
-        },
-        icon = {
-          Icon(
-            painter = sheetItem.icon,
-            contentDescription = sheetItem.label
-          )
-        }
-      )
+        )
+      } else if (sheetItem.label == "About DiNa")
+      {
+        ListItem(
+          modifier = Modifier.clickable {
+            navController.navigate("about") // Navigate to the "About" screen
+            coroutineScope.launch {
+              scaffoldState.bottomSheetState.collapse()
+            }
+          },
+          text = {
+            Text(text = sheetItem.label)
+          },
+          icon = {
+            Icon(
+              painter = sheetItem.icon,
+              contentDescription = sheetItem.label
+            )
+          }
+        )
+      } else
+      {
+        ListItem(
+          modifier = Modifier.clickable {
+            Toast.makeText(contextForToast, "Item ", Toast.LENGTH_SHORT).show()
+
+            coroutineScope.launch {
+              scaffoldState.bottomSheetState.collapse()
+            }
+          },
+          text = {
+            Text(text = sheetItem.label)
+          },
+          icon = {
+            Icon(
+              painter = sheetItem.icon,
+              contentDescription = sheetItem.label
+            )
+          }
+        )
+      }
     }
   }
-}}
+}
 
 @Composable
 private fun prepareBottomSheet(): List<BottomSheetItem>
 {
   val bottomSheetItemsList = arrayListOf<BottomSheetItem>()
   // add menu items
+//  bottomSheetItemsList.add(
+//    BottomSheetItem(
+//      label = "Settings", icon = painterResource(
+//        id = R.drawable.baseline_settings_24
+//      )
+//    )
+//  )
   bottomSheetItemsList.add(
     BottomSheetItem(
-      label = "Settings", icon = painterResource(
-        id = R.drawable.baseline_settings_24
-      )
+      label = "About DiNa",
+      icon = painterResource(id = R.drawable.baseline_info_24)
     )
   )
   bottomSheetItemsList.add(
-    BottomSheetItem(label = "About DiNa", icon = painterResource(id = R.drawable.baseline_info_24))
+    BottomSheetItem(
+      label = "Help",
+      icon = painterResource(id = R.drawable.baseline_help_24)
+    )
   )
   bottomSheetItemsList.add(
-    BottomSheetItem(label = "Help", icon = painterResource(id = R.drawable.baseline_help_24))
-  )
-  bottomSheetItemsList.add(
-    BottomSheetItem(label = "Logout", icon = painterResource(id = R.drawable.baseline_logout_24))
+    BottomSheetItem(
+      label = "Logout",
+      icon = painterResource(id = R.drawable.baseline_logout_24)
+    )
   )
 
 

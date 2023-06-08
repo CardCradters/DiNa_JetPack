@@ -7,7 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.auth.Login
 import com.example.dina_compose.screen.auth.Register
-import com.example.dina_compose.screen.bottomsheet.about
+import com.example.dina_compose.screen.bottomsheet.About
 import com.example.dina_compose.screen.home.Home
 import com.example.dina_compose.screen.profile.Profile
 import com.example.dina_compose.screen.splash.SplashScreen
@@ -31,7 +31,7 @@ fun AppNavigation()
       SplashScreen(navController = navController)
     }
     composable("about") {
-      about()
+      About()
     }
     composable("profile_screen") {
       Profile(

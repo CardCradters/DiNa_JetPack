@@ -1,4 +1,4 @@
-package com.example.dina_compose.screen.home
+package com.example.dina_compose.screen.storage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,17 +39,20 @@ import androidx.navigation.NavHostController
 import com.example.dina_compose.component.BottomBar
 import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.CardListItem
+import com.example.dina_compose.component.Categories
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.screen.home.HomeViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Home(
+fun Storage(
   navController: NavHostController,
   viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-) {
+)
+{
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
@@ -56,11 +60,14 @@ fun Home(
   val scrollState = rememberLazyListState()
   val users by viewModel.users.collectAsState(emptyList())
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
+
   var queryState by remember { mutableStateOf("") }
+  var selectedIndex by remember { mutableIntStateOf(0) }
 
   LaunchedEffect(Unit) {
     viewModel.fetchUsers(context)
   }
+
 
   Scaffold(
     scaffoldState = scaffoldState,
@@ -68,9 +75,11 @@ fun Home(
     topBar = {
       TopAppBar {
         coroutineScope.launch {
-          if (sheetState.bottomSheetState.isCollapsed) {
+          if (sheetState.bottomSheetState.isCollapsed)
+          {
             sheetState.bottomSheetState.expand()
-          } else {
+          } else
+          {
             sheetState.bottomSheetState.collapse()
           }
         }
@@ -111,10 +120,14 @@ fun Home(
               viewModel.performSearch(context, query) // Call performSearch in the view model
             })
             NamecardView()
-            Text(
-              "Digitize Your Network",
-              fontSize = 24.sp,
-              fontWeight = FontWeight.SemiBold
+
+            Categories(
+              times = 3,
+              label = listOf("All", "Star", "Company"),
+              selectedIndex = selectedIndex,
+              onCategorySelected = { index ->
+                selectedIndex = index
+              }
             )
 
             Box {
@@ -125,7 +138,12 @@ fun Home(
                   .fillMaxSize()
               ) {
                 Text(
-                  "Last Activity",
+                  text = when (selectedIndex) {
+                    0 -> "All Namecard"
+                    1 -> "Star Namecard"
+                    2 -> "Company Namecard"
+                    else -> ""
+                  },
                   fontSize = 14.sp,
                   fontWeight = FontWeight.Medium
                 )
@@ -162,22 +180,22 @@ fun Home(
   }
 }
 
+
 //@Preview(showBackground = true)
 //@Composable
-//fun HomePreview()
+//fun StoragePreview()
 //{
 //  val navController = rememberNavController()
 //  val viewModel = HomeViewModel()
 //
-//  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
-//    // 'background' color from the theme
+//  DiNa_ComposeTheme(darkTheme = false) {
 //    Surface(
 //      modifier = Modifier
 //        .fillMaxSize()
 //        .background(brush = verticalGradientBrush),
 //      color = Color.Transparent,
 //    ) {
-//      Home(navController = navController, viewModel = viewModel)
+//      Storage(navController = navController, viewModel = viewModel)
 //    }
 //  }
 //}
