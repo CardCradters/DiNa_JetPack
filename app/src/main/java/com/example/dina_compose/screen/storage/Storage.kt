@@ -1,6 +1,5 @@
 package com.example.dina_compose.screen.storage
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -25,31 +23,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.dina_compose.Categories
 import com.example.dina_compose.component.BottomBar
 import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.CardListItem
+import com.example.dina_compose.component.Categories
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
 import com.example.dina_compose.screen.home.HomeViewModel
-import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
-import com.example.dina_compose.ui.theme.verticalGradientBrush
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -68,8 +62,7 @@ fun Storage(
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
 
   var queryState by remember { mutableStateOf("") }
-
-  val label = listOf("All", "Star", "Company")
+  var selectedIndex by remember { mutableIntStateOf(0) }
 
   LaunchedEffect(Unit) {
     viewModel.fetchUsers(context)
@@ -128,16 +121,29 @@ fun Storage(
             })
             NamecardView()
 
-            Categories(times = 3, label = label)
+            Categories(
+              times = 3,
+              label = listOf("All", "Star", "Company"),
+              selectedIndex = selectedIndex,
+              onCategorySelected = { index ->
+                selectedIndex = index
+              }
+            )
 
             Box {
               Column(
                 Modifier
-                  .padding(all = 16.dp)
+                  .padding(top = 24.dp)
+                  .padding(horizontal = 16.dp)
                   .fillMaxSize()
               ) {
                 Text(
-                  "Last Activity",
+                  text = when (selectedIndex) {
+                    0 -> "All Namecard"
+                    1 -> "Star Namecard"
+                    2 -> "Company Namecard"
+                    else -> ""
+                  },
                   fontSize = 14.sp,
                   fontWeight = FontWeight.Medium
                 )
@@ -175,21 +181,21 @@ fun Storage(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun StoragePreview()
-{
-  val navController = rememberNavController()
-  val viewModel = HomeViewModel()
-
-  DiNa_ComposeTheme(darkTheme = false) {
-    Surface(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(brush = verticalGradientBrush),
-      color = Color.Transparent,
-    ) {
-      Storage(navController = navController, viewModel = viewModel)
-    }
-  }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun StoragePreview()
+//{
+//  val navController = rememberNavController()
+//  val viewModel = HomeViewModel()
+//
+//  DiNa_ComposeTheme(darkTheme = false) {
+//    Surface(
+//      modifier = Modifier
+//        .fillMaxSize()
+//        .background(brush = verticalGradientBrush),
+//      color = Color.Transparent,
+//    ) {
+//      Storage(navController = navController, viewModel = viewModel)
+//    }
+//  }
+//}

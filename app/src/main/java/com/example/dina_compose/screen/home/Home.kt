@@ -120,7 +120,8 @@ fun Home(
             Box {
               Column(
                 Modifier
-                  .padding(all = 16.dp)
+                  .padding(top = 24.dp)
+                  .padding(horizontal = 16.dp)
                   .fillMaxSize()
               ) {
                 Text(

@@ -74,19 +74,19 @@ fun ProfilePicture()
   }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileView()
-{
-  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
-    // 'background' color from the theme
-    Surface(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(brush = verticalGradientBrush),
-      color = Color.Transparent,
-    ) {
-      ProfilePicture()
-    }
-  }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfileView()
+//{
+//  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
+//    // 'background' color from the theme
+//    Surface(
+//      modifier = Modifier
+//        .fillMaxSize()
+//        .background(brush = verticalGradientBrush),
+//      color = Color.Transparent,
+//    ) {
+//      ProfilePicture()
+//    }
+//  }
+//}

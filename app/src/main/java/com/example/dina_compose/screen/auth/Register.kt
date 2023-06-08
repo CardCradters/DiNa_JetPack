@@ -78,7 +78,7 @@ fun Register(
     Text(
       text = "Sign Up",
       fontSize = 20.sp,
-      fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+      fontWeight = FontWeight.Bold,
       modifier = Modifier
         .padding(top = 16.dp)
         .align(Alignment.Start)

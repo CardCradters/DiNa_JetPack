@@ -16,12 +16,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -71,12 +71,12 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: HomeViewModel)
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
         Image(
-          painter = painterResource(id = R.drawable.user),
+          painter = painterResource(id = R.drawable.baseline_account_circle_24),
           contentDescription = "Profile Picture",
           Modifier
             .clip(shape = CircleShape)
             .size(60.dp)
-            .background(color = Color.Black)
+            .background(color = MaterialTheme.colors.primary)
 //              .fillMaxHeight(),
         )
         Column(
@@ -115,14 +115,14 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: HomeViewModel)
 }
 
 
-@Composable
-fun CardListItemPreview()
-{
-////  val user = UserResponse(
-////    uid = "SfKdlwnuCmNjasiPzz1g8xH4a9k1",
-////    name = "Syabina Nur",
-////    job_title = "Developer",
-////    workplace = "ABC Company"
-////  )
-//  CardListItem(user = user, contextForToast = LocalContext.current.applicationContext)
-}
+//@Composable
+//fun CardListItemPreview()
+//{
+//////  val user = UserResponse(
+//////    uid = "SfKdlwnuCmNjasiPzz1g8xH4a9k1",
+//////    name = "Syabina Nur",
+//////    job_title = "Developer",
+//////    workplace = "ABC Company"
+//////  )
+////  CardListItem(user = user, contextForToast = LocalContext.current.applicationContext)
+//}
