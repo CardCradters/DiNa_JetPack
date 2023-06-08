@@ -1,6 +1,10 @@
 package com.example.dina_compose.data
 
+import com.google.gson.annotations.SerializedName
+
 data class Payload(
-    val datas: List<UserRequest>,
-    val status_code: Int
+  @SerializedName("datas")
+  val datas: List<UserRequest>,
+  @SerializedName("status_code")
+  val statusCode: Int
 )
