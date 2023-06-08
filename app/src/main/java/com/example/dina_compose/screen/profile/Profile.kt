@@ -1,5 +1,6 @@
 package com.example.dina_compose.screen.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -26,6 +29,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +42,7 @@ import com.example.dina_compose.component.DetailProfile
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.ProfilePicture
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.home.HomeViewModel
 import kotlinx.coroutines.launch
 
@@ -50,20 +56,35 @@ fun Profile(
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  val context = LocalContext.current
+  val brush =
+    androidx.compose.ui.graphics.Brush.linearGradient(
+      listOf(
+        Color(0xFF83B9E2),
+        Color(0xFFFFFFFF)
+      )
+    )
+  val contextForToast = LocalContext.current
   val scrollState = rememberLazyListState()
-  val users by viewModel.users.collectAsState(emptyList())
-  val placeholders = listOf("Email", "Telephone", "FAX", "Mobile", "Website")
+  val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
+  val placeholders = listOf(
+    if (profile?.email.isNullOrEmpty()) "Email" else profile?.email,
+    if (profile?.phoneFaxCompany.isNullOrEmpty()) "Telephone" else profile?.phoneFaxCompany,
+    if (profile?.phoneMobileCompany.isNullOrEmpty()) "FAX" else profile?.phoneMobileCompany,
+    if (profile?.workplaceUri.isNullOrEmpty()) "Mobile" else profile?.workplaceUri,
+    "Website"
+  )
 
   LaunchedEffect(Unit) {
-    viewModel.fetchUsers(context)
+    viewModel.fetchProfile(contextForToast)
   }
+
 
   Scaffold(
     scaffoldState = scaffoldState,
-
+    modifier = Modifier.background(brush),
     topBar = {
       TopAppBar {
+
         coroutineScope.launch {
           if (sheetState.bottomSheetState.isCollapsed)
           {
@@ -76,20 +97,19 @@ fun Profile(
       }
     },
     bottomBar = {
-      BottomBar(navController = navController, contextForToast = context)
+      BottomBar(contextForToast = contextForToast, navController = navController)
     },
   ) { innerPadding ->
     BottomSheetScaffold(
       scaffoldState = sheetState,
-      sheetBackgroundColor = MaterialTheme.colors.primary,
+      sheetBackgroundColor = MaterialTheme.colors.background,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
       sheetContent = {
         BottomSheet(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
-          contextForToast = context,
-          navController = navController,
-          viewModel = viewModel
+          contextForToast = contextForToast,viewModel = viewModel, navController=
+          navController
         )
       },
       content = {
@@ -106,17 +126,16 @@ fun Profile(
             horizontalAlignment = Alignment.CenterHorizontally,
           ) {
             Box(
-              modifier = Modifier,
               contentAlignment = Alignment.BottomCenter
             ) {
               NamecardView()
-              ProfilePicture()
+              ProfilePicture(contextForToast, viewModel = ProfileViewModel())
             }
+
             Card(
               modifier = Modifier
                 .padding(top = 66.dp)
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth().background(Color(0xFFD1D1D1)),
               shape = RoundedCornerShape(8.dp),
               elevation = 5.dp,
             ) {
@@ -127,47 +146,52 @@ fun Profile(
                 verticalArrangement = Arrangement.Center,
               ) {
                 Text(
-                  text = "+62 123456789",
-                  style = MaterialTheme.typography.subtitle1,
+                  profile?.name ?: "",
+                  style = MaterialTheme.typography.subtitle1
                 )
+
                 Text(
+                  profile?.phoneNumber ?: "",
                   modifier = Modifier.padding(top = 8.dp),
-                  text = "example@email.com",
-                  style = MaterialTheme.typography.subtitle2,
+                  style = MaterialTheme.typography.subtitle2
                 )
-              }
-            }
+              }}
 
-            Column(
-              Modifier
+            Box(
+              modifier = Modifier
                 .padding(top = 24.dp)
-                .fillMaxSize()
             ) {
-              Text(
-                "Company",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
-              )
-
-              Spacer(Modifier.height(16.dp))
-
-              LazyColumn(
-                modifier = Modifier
-                  .fillMaxSize(),
-                state = scrollState
+              Column(
+                Modifier
+                  .fillMaxSize()
               ) {
-                item {
-                  Card(
-                    modifier = Modifier
-                      .padding(bottom = 8.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    elevation = 5.dp,
-                  ) {
-                    Column(
-                      horizontalAlignment = Alignment.CenterHorizontally,
-                      verticalArrangement = Arrangement.Center,
+                Text(
+                  "Company",
+                  fontSize = 14.sp,
+                  fontWeight = FontWeight.Medium
+                )
+
+                LazyColumn(
+                  modifier = Modifier
+                    .fillMaxSize(),
+                  state = scrollState
+                ) {
+                  item {
+                    Card(
+                      modifier = Modifier
+                        .padding(bottom = 8.dp),
+                      shape = RoundedCornerShape(8.dp),
+                      elevation = 5.dp,
                     ) {
-                      DetailProfile(times = 5, placeholderTexts = placeholders)
+                      Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                      ) {
+                        DetailProfile(times = 5, placeholderTexts = placeholders as List<String>,
+                          viewModel = HomeViewModel()
+                        )
+
+                      }
                     }
                   }
                 }
@@ -175,27 +199,6 @@ fun Profile(
             }
           }
         }
-      }
-    )
-  }
-}
+      })
+  }}
 
-//@Preview(showBackground = true)
-//@Composable
-//fun ProfileView()
-//{
-//  val navController = rememberNavController()
-//  val viewModel = remember { HomeViewModel() }
-//
-//  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
-//    // 'background' color from the theme
-//    Surface(
-//      modifier = Modifier
-//        .fillMaxSize()
-//        .background(brush = verticalGradientBrush),
-//      color = Color.Transparent,
-//    ) {
-//      Profile(navController = navController, viewModel = viewModel)
-//    }
-//  }
-//}

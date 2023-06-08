@@ -215,23 +215,5 @@ fun Login(
     }
   }
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun LoginPreview()
-//{
-//  val navController = rememberNavController()
-//  val viewModel = remember { HomeViewModel() }
-//
-//  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
-//    // 'background' color from the theme
-//    Surface(
-//      modifier = Modifier
-//        .fillMaxSize()
-//        .background(brush = verticalGradientBrush),
-//      color = Color.Transparent,
-//    ) {
-//      Login(navController = navController)
-//    }
-//  }
-//}
+
 

@@ -17,6 +17,6 @@ data class PayloadX(
 	val statusCode: Int,
 
 	@SerializedName("datas")
-	val datas: List<ProfileRequest>
+	val datas: ProfileRequest
 )
 

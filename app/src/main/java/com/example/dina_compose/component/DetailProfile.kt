@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,13 +32,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.dina_compose.R
+import com.example.dina_compose.data.ProfileRequest
+import com.example.dina_compose.screen.home.HomeViewModel
 
 @Composable
-fun DetailProfile(times: Int, placeholderTexts: List<String>)
+fun DetailProfile(times: Int, placeholderTexts: List<String>, viewModel:HomeViewModel)
 {
   val focusManager = LocalFocusManager.current
   var compValue by remember { mutableStateOf("") }
   var addrValue by remember { mutableStateOf("") }
+  val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
   val textFieldValues = remember { mutableStateListOf<String>() }
   val icons = listOf(
     painterResource(id = R.drawable.baseline_alternate_email_24),
@@ -52,18 +56,23 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>)
       value = compValue,
       onValueChange = { compValue = it },
       shape = RoundedCornerShape(0.dp),
-      modifier = Modifier
-        .fillMaxWidth(),
-      textStyle = MaterialTheme.typography.subtitle1
-        .copy(textAlign = TextAlign.Center),
+      modifier = Modifier.fillMaxWidth(),
+      textStyle = MaterialTheme.typography.subtitle1.copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        Text(
-          text = "Company",
-          modifier = Modifier.fillMaxWidth(),
-          textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.body1
-        )
+        val companyText = if (profile?.workplace.isNullOrEmpty()) {
+          "Company"
+        } else {
+          profile?.workplace
+        }
+        companyText?.let {
+          Text(
+            text = it,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.body1
+          )
+        }
       },
       keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
@@ -82,6 +91,7 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>)
         disabledIndicatorColor = Color.Transparent
       )
     )
+
     TextField(
       value = addrValue,
       onValueChange = { addrValue = it },
@@ -93,12 +103,19 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>)
         .copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        Text(
-          text = "Office Address",
-          modifier = Modifier.fillMaxWidth(),
-          textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.body1
-        )
+        val addresText = if (profile?.addressCompany.isNullOrEmpty()) {
+          "Address Company"
+        } else {
+          profile?.addressCompany
+        }
+        addresText?.let {
+          Text(
+            text = it,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.body1
+          )
+        }
       },
       keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,

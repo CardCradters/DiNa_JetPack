@@ -1,6 +1,11 @@
 package com.example.dina_compose.data
 
+import com.google.gson.annotations.SerializedName
+
 data class UserResponse(
+  @SerializedName("message")
   val message: String,
-  val payload: Payload,
-  )
+  @SerializedName("payload")
+  val payload: Payload
+)
+
