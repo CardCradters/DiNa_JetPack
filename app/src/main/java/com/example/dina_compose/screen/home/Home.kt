@@ -1,6 +1,5 @@
 package com.example.dina_compose.screen.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,11 +29,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -55,28 +52,19 @@ fun Home(
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  val Brush =
-    androidx.compose.ui.graphics.Brush.linearGradient(
-      listOf(
-        Color(0xFF83B9E2),
-        Color(0xFFFFFFFF)
-      )
-    )
   val context = LocalContext.current
   val scrollState = rememberLazyListState()
   val users by viewModel.users.collectAsState(emptyList())
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
   var queryState by remember { mutableStateOf("") }
 
-
   LaunchedEffect(Unit) {
     viewModel.fetchUsers(context)
   }
 
-
   Scaffold(
     scaffoldState = scaffoldState,
-    modifier = Modifier.background(Brush),
+
     topBar = {
       TopAppBar {
         coroutineScope.launch {
@@ -94,7 +82,7 @@ fun Home(
   ) { innerPadding ->
     BottomSheetScaffold(
       scaffoldState = sheetState,
-      sheetBackgroundColor = MaterialTheme.colors.background,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
       sheetContent = {
         BottomSheet(
@@ -108,7 +96,9 @@ fun Home(
       content = {
         //    Activity
         Column(
-          modifier = Modifier.padding(innerPadding),
+          modifier = Modifier
+            .padding(innerPadding)
+            .padding(horizontal = 24.dp),
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -118,9 +108,7 @@ fun Home(
           ) {
             SearchBar(onSearch = { query ->
               queryState = query
-              viewModel.performSearch(context, query) // Call performSearch in the
-            // view
-            // model
+              viewModel.performSearch(context, query) // Call performSearch in the view model
             })
             NamecardView()
             Text(
@@ -128,7 +116,6 @@ fun Home(
               fontSize = 24.sp,
               fontWeight = FontWeight.SemiBold
             )
-
 
             Box {
               Column(
@@ -141,12 +128,12 @@ fun Home(
                   fontSize = 14.sp,
                   fontWeight = FontWeight.Medium
                 )
+
                 Spacer(Modifier.height(16.dp))
 
                 LazyColumn(
                   modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                   verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                   state = scrollState
                 ) {
@@ -174,8 +161,22 @@ fun Home(
   }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ScaffoldView() {
-
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomePreview()
+//{
+//  val navController = rememberNavController()
+//  val viewModel = HomeViewModel()
+//
+//  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
+//    // 'background' color from the theme
+//    Surface(
+//      modifier = Modifier
+//        .fillMaxSize()
+//        .background(brush = verticalGradientBrush),
+//      color = Color.Transparent,
+//    ) {
+//      Home(navController = navController, viewModel = viewModel)
+//    }
+//  }
+//}

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -43,7 +44,7 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>)
     painterResource(id = R.drawable.baseline_phone_24),
     painterResource(id = R.drawable.baseline_fax_24),
     painterResource(id = R.drawable.baseline_phone_android_24),
-    painterResource(id = R.drawable.baseline_account_circle_24)
+    painterResource(id = R.drawable.baseline_public_24)
   )
 
   Column {
@@ -117,8 +118,6 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>)
       )
     )
 
-
-
     repeat(times) { index ->
       var itemValue by remember { mutableStateOf("") }
 
@@ -135,7 +134,9 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>)
           }
         },
         shape = RoundedCornerShape(0.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 8.dp),
         textStyle = MaterialTheme.typography.subtitle1.copy(
           textAlign = TextAlign
             .End

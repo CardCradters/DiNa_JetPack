@@ -39,7 +39,9 @@ fun BottomSheet(
   val bottomSheetItemsList = prepareBottomSheet()
 
   LazyColumn(
-    Modifier.padding(bottom = 56.dp)
+    Modifier
+      .padding(bottom = 56.dp)
+      .padding(top = 20.dp)
   ) {
     items(bottomSheetItemsList) { sheetItem ->
       if (sheetItem.label == "Logout")
@@ -114,13 +116,13 @@ private fun prepareBottomSheet(): List<BottomSheetItem>
 {
   val bottomSheetItemsList = arrayListOf<BottomSheetItem>()
   // add menu items
-  bottomSheetItemsList.add(
-    BottomSheetItem(
-      label = "Settings", icon = painterResource(
-        id = R.drawable.baseline_settings_24
-      )
-    )
-  )
+//  bottomSheetItemsList.add(
+//    BottomSheetItem(
+//      label = "Settings", icon = painterResource(
+//        id = R.drawable.baseline_settings_24
+//      )
+//    )
+//  )
   bottomSheetItemsList.add(
     BottomSheetItem(
       label = "About DiNa",

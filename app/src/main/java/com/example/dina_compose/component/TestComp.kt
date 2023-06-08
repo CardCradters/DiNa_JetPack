@@ -1,106 +1,88 @@
 package com.example.dina_compose.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.dina_compose.R
+import com.example.dina_compose.screen.splash.SplashViewModel
 import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 import com.example.dina_compose.ui.theme.verticalGradientBrush
 
 @Composable
-fun TestComp()
+fun TestComp(
+  navController: NavHostController,
+  viewModel: SplashViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+)
 {
-  val placeholders = listOf("Email", "Telephone", "FAX", "Mobile", "Website")
-  val scrollState = rememberLazyListState()
+//  LaunchedEffect(key1 = viewModel, block = {
+//    viewModel.checkIsLoggedIn {
+//      navController.navigate(
+//        if (it) "home_screen" else "login_screen"
+//      )
+//    }
+//  }
+//  )
 
   Column(
-    modifier = Modifier.fillMaxSize(),
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(horizontal = 24.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    Box(
-      modifier = Modifier,
-      contentAlignment = BottomCenter
-    ) {
-      NamecardView()
-      ProfilePicture()
-    }
-    Card(
+    Text(
+      text = "Welcome in DiNa",
+      color = Color.Black,
+      fontSize = 30.sp,
+      fontWeight = FontWeight.Bold,
       modifier = Modifier
-        .padding(top = 66.dp)
-        .fillMaxWidth(),
-      shape = RoundedCornerShape(8.dp),
-      elevation = 5.dp,
-    ) {
-      Column(
-        modifier = Modifier
-          .padding(all = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-      ) {
-        Text(
-          text = "Username",
-          style = MaterialTheme.typography.subtitle1,
-        )
-        Text(
-          modifier = Modifier.padding(top = 8.dp),
-          text = "+62 89923234819",
-          style = MaterialTheme.typography.subtitle1,
-        )
-      }
-    }
-
-    Column(
-      Modifier
-        .padding(top = 24.dp)
-        .fillMaxSize()
+        .padding(top = 38.dp)
+    )
+    Image(
+      painter = painterResource(id = R.drawable.img_1),
+      contentDescription = "Image",
+      modifier = Modifier
+        .fillMaxWidth()
+        .aspectRatio(3f / 4f)
+    )
+    Button(
+      onClick = {
+        navController.navigate("login_screen")
+      },
+      colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
+      modifier = Modifier
+        .padding(top = 16.dp)
+        .width(240.dp)
+        .height(44.dp),
     ) {
       Text(
-        "Company",
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Medium
+        text = "Let's Start",
+        style = MaterialTheme.typography.subtitle1,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black
       )
-      Spacer(Modifier.height(16.dp))
-
-      LazyColumn(
-        modifier = Modifier
-          .fillMaxSize(),
-        state = scrollState
-      ) {
-        item {
-          Card(
-            shape = RoundedCornerShape(8.dp),
-            elevation = 5.dp,
-          ) {
-            Column(
-              horizontalAlignment = Alignment.CenterHorizontally,
-              verticalArrangement = Arrangement.Center,
-            ) {
-              DetailProfile(times = 5, placeholderTexts = placeholders)
-            }
-          }
-        }
-      }
     }
   }
 }
@@ -109,6 +91,8 @@ fun TestComp()
 @Composable
 fun TestCompView()
 {
+  val navController = rememberNavController()
+
   DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
     // 'background' color from the theme
     Surface(
@@ -117,7 +101,7 @@ fun TestCompView()
         .background(brush = verticalGradientBrush),
       color = Color.Transparent,
     ) {
-      TestComp()
+      TestComp(navController = navController)
     }
   }
 }

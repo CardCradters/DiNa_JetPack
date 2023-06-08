@@ -67,9 +67,9 @@ fun Profile(
     viewModel.fetchUsers(context)
   }
 
-
   Scaffold(
     scaffoldState = scaffoldState,
+
     topBar = {
       TopAppBar {
         coroutineScope.launch {
@@ -89,7 +89,7 @@ fun Profile(
   ) { innerPadding ->
     BottomSheetScaffold(
       scaffoldState = sheetState,
-      sheetBackgroundColor = MaterialTheme.colors.background,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
       sheetContent = {
         BottomSheet(
@@ -123,6 +123,7 @@ fun Profile(
             Card(
               modifier = Modifier
                 .padding(top = 66.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
               shape = RoundedCornerShape(8.dp),
               elevation = 5.dp,
@@ -134,13 +135,13 @@ fun Profile(
                 verticalArrangement = Arrangement.Center,
               ) {
                 Text(
-                  text = "Username",
+                  text = "+62 123456789",
                   style = MaterialTheme.typography.subtitle1,
                 )
                 Text(
                   modifier = Modifier.padding(top = 8.dp),
-                  text = "+62 89923234819",
-                  style = MaterialTheme.typography.subtitle1,
+                  text = "example@email.com",
+                  style = MaterialTheme.typography.subtitle2,
                 )
               }
             }
@@ -155,6 +156,7 @@ fun Profile(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
               )
+
               Spacer(Modifier.height(16.dp))
 
               LazyColumn(
