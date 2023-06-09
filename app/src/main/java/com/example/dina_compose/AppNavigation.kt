@@ -11,6 +11,7 @@ import com.example.dina_compose.screen.bottomsheet.About
 import com.example.dina_compose.screen.home.Home
 import com.example.dina_compose.screen.profile.Profile
 import com.example.dina_compose.screen.splash.SplashScreen
+import com.example.dina_compose.screen.storage.Storage
 
 @Composable
 fun AppNavigation()
@@ -38,11 +39,11 @@ fun AppNavigation()
         navController = navController
       )
     }
+    composable("storage_screen") {
+      Storage(
+        navController = navController
+      )
+    }
   }
 }
-//
-//, profiles =
-//ProfileRequest(
-//"", "", "", "", "", "", "",
-//"", "", "", "", "", ""
-//)
+

@@ -35,6 +35,7 @@ fun BottomBar(navController: NavHostController, contextForToast: Context)
           when (menuItem.label) {
             "Home" -> navController.navigate("home_screen")
             "Profile" -> navController.navigate("profile_screen")
+            "Storage" -> navController.navigate("storage_screen")
             else -> Unit
           }
         },

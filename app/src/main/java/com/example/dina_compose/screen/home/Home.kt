@@ -41,6 +41,7 @@ import com.example.dina_compose.component.CardListItem
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.screen.profile.ProfileViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -110,7 +111,7 @@ fun Home(
               queryState = query
               viewModel.performSearch(context, query) // Call performSearch in the view model
             })
-            NamecardView()
+            NamecardView(viewModel = ProfileViewModel())
             Text(
               "Digitize Your Network",
               fontSize = 24.sp,

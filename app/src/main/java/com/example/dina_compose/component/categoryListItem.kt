@@ -28,23 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dina_compose.R
 import com.example.dina_compose.data.UserRequest
-import com.example.dina_compose.screen.home.HomeViewModel
+import com.example.dina_compose.screen.storage.StorageViewModel
+
 
 @Composable
-fun ClickableIcon(
-  isStared: Boolean,
-  onClick: () -> Unit
-) {
-  Icon(
-    painter = painterResource(id = if (isStared) R.drawable.baseline_star_outline_24 else R.drawable
-      .baseline_star_25),
-    contentDescription = "Star",
-    modifier = Modifier.clickable { onClick() }
-  )
-}
-
-@Composable
-fun CardListItem(user: UserRequest, context: Context, viewModel: HomeViewModel)
+fun categoryListItem(user: UserRequest, context: Context, viewModel:
+StorageViewModel)
 {
   Card(
     Modifier
@@ -104,29 +93,12 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: HomeViewModel)
           )
         }
       }
-      ClickableIcon(
-        isStared = user.stared
-      ) {
-        viewModel.starred(
-          context = context,
-          uid = user.uid,
-          name = user.name,
-          job_title = user.job_title,
-          workplace = user.workplace,
-          isStarred = !user.stared,
-          filename = user.filename,
-          storagePath = user.storagePath,
-          password = user.password,
-          workplaceUri = user.workplaceUri,
-          addressCompany = user.addressCompany,
-          emailCompany = user.emailCompany,
-          email = user.email,
-          phoneMobileCompany = user.phoneMobileCompany,
-          phoneFaxCompany = user.phoneFaxCompany,
-          phoneTelpCompany = user.phoneTelpCompany,
-          phoneNumber = user.phoneNumber
-        )
-      }
+//      ClickableIcon(
+//        isStared = user.stared
+//      ) {
+//        viewModel.starred(context, user.uid, !user.stared)
+//      }
     }
   }
+
 }

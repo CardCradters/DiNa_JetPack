@@ -1,10 +1,12 @@
 package com.example.dina_compose.screen.profile
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,11 +33,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.dina_compose.R
 import com.example.dina_compose.component.BottomBar
 import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.DetailProfile
@@ -50,7 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Profile(
   navController: NavHostController,
-  viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+  viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 )
 {
   val scaffoldState = rememberScaffoldState()
@@ -108,7 +114,7 @@ fun Profile(
         BottomSheet(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
-          contextForToast = contextForToast,viewModel = viewModel, navController=
+          contextForToast = contextForToast,viewModel = HomeViewModel(), navController=
           navController
         )
       },
@@ -128,8 +134,8 @@ fun Profile(
             Box(
               contentAlignment = Alignment.BottomCenter
             ) {
-              NamecardView()
-              ProfilePicture(contextForToast, viewModel = ProfileViewModel())
+              NamecardView(viewModel = viewModel)
+              ProfilePicture(viewModel = viewModel)
             }
 
             Card(
@@ -188,7 +194,7 @@ fun Profile(
                         verticalArrangement = Arrangement.Center,
                       ) {
                         DetailProfile(times = 5, placeholderTexts = placeholders as List<String>,
-                          viewModel = HomeViewModel()
+                          viewModel = viewModel
                         )
 
                       }
@@ -201,4 +207,3 @@ fun Profile(
         }
       })
   }}
-

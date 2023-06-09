@@ -29,8 +29,6 @@ data class ProfileRequest(
   val phoneFaxCompany: String,
   @SerializedName("phoneTelpCompany")
   val phoneTelpCompany: String,
-  @SerializedName("stared")
-  val stared: Boolean,
   @SerializedName("filename")
   val filename: String,
   @SerializedName("storagePath")

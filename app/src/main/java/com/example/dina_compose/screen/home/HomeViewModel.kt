@@ -2,14 +2,9 @@ package com.example.dina_compose.screen.home
 
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dina_compose.UserPreference
 import com.example.dina_compose.api.ApiConfig
 import com.example.dina_compose.common.DataState
 import com.example.dina_compose.common.safeApiCall
@@ -30,16 +25,8 @@ class HomeViewModel(
   private val _searchResults = MutableStateFlow<List<UserRequest>>(emptyList())
   val searchResult: StateFlow<List<UserRequest>> = _searchResults
 
-//  val context = LocalContext.current
-//  private val userPreference: UserPreference = UserPreference(context)
-  private val _stared = MutableStateFlow<ProfileRequest?>(null)
-  val stared:StateFlow<ProfileRequest?>  = _stared
-
-  private val _profile = MutableStateFlow<ProfileRequest?>(null)
-  val profile: StateFlow<ProfileRequest?> = _profile
-
-
-
+  private val _stared = MutableStateFlow<List<UserRequest>>(emptyList())
+  val stared : StateFlow<List<UserRequest>>  = _stared
 
   fun fetchUsers(context: Context) = viewModelScope.launch {
     when (val result = safeApiCall { ApiConfig.apiService(context).getUsers() }) {
@@ -67,59 +54,51 @@ class HomeViewModel(
     }
   }
 
-  fun starred(context: Context, uid: String, isStarred: Boolean) = viewModelScope.launch {
+  fun starred(context: Context,
+              uid: String,
+              name: String,
+              job_title: String,
+              workplace: String,
+              isStarred: Boolean,
+              filename: String,
+              storagePath: String,
+              password: String,
+              workplaceUri: String,
+              addressCompany: String,
+              emailCompany: String,
+              email: String,
+              phoneMobileCompany: String,
+              phoneFaxCompany: String,
+              phoneTelpCompany: String,
+              phoneNumber: String,
+              callback: (Boolean, String) -> Unit = { _, _ -> }
+  ) = viewModelScope.launch {
 
-
-    val profileRequest = ProfileRequest(
+    val userRequest = UserRequest(
       uid = uid,
-      name = "",
-      job_title = "",
-      workplace = "",
+      name = name,
+      job_title = job_title,
+      workplace = workplace,
       stared = isStarred,
-      filename = "",
-      storagePath = "",
-      password ="",
-      workplaceUri ="",
-      addressCompany ="",
-      emailCompany ="",
-      email ="",
-      phoneMobileCompany ="",
-      phoneFaxCompany ="",
-      phoneTelpCompany ="",
-      phoneNumber ="",
+      filename = filename,
+      storagePath = storagePath,
+      password =password,
+      workplaceUri = workplaceUri,
+      addressCompany =addressCompany,
+      emailCompany =emailCompany,
+      email =email,
+      phoneMobileCompany =phoneMobileCompany,
+      phoneFaxCompany =phoneFaxCompany,
+      phoneTelpCompany =phoneTelpCompany,
+      phoneNumber =phoneNumber,
     )
 
-    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid, profileRequest)
+    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid, userRequest)
     }) {
 
+      is DataState.Error -> callback(false, result.message)
       DataState.Loading -> Unit
-      is DataState.Error -> Log.e("salah", result.message)
-      is DataState.Result -> {
-        // Handle the result accordingly
-        if (result.data.payloadx?.datas != null) {
-          // Update the stared list with the updated data
-          _stared.tryEmit(result.data.payloadx.datas)
-
-//          userPreference.saveStared(isStarred)
-        } else {
-          // Handle the case when the payload or datas are null
-          Log.e("salah", "No Saved User")
+      is DataState.Result -> callback(true, "Berhasil")
         }
       }
     }
-  }
-
-
-  fun fetchProfile(context: Context) = viewModelScope.launch {
-    when (val result = safeApiCall { ApiConfig.apiService(context).getProfile() }) {
-      DataState.Loading -> Unit
-      is DataState.Error -> Log.e("salah", result.message)
-      is DataState.Result -> {
-        _profile.tryEmit(result.data.payloadx.datas)
-      }
-    }
-  }
-
-
-
-}

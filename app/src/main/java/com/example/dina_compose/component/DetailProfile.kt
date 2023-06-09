@@ -34,9 +34,10 @@ import androidx.compose.ui.unit.dp
 import com.example.dina_compose.R
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.home.HomeViewModel
+import com.example.dina_compose.screen.profile.ProfileViewModel
 
 @Composable
-fun DetailProfile(times: Int, placeholderTexts: List<String>, viewModel:HomeViewModel)
+fun DetailProfile(times: Int, placeholderTexts: List<String>, viewModel:ProfileViewModel)
 {
   val focusManager = LocalFocusManager.current
   var compValue by remember { mutableStateOf("") }
