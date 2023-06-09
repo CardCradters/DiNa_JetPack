@@ -24,7 +24,7 @@ import com.example.dina_compose.R
 import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
-fun NamecardView()
+fun NamecardView(companyName: String, username: String, jobTitle: String )
 {
   Card(
     modifier = Modifier
@@ -40,7 +40,7 @@ fun NamecardView()
       contentScale = ContentScale.Crop,
     )
     Text(
-      text = "PT. AXIA PRIMA SEJAHTERA", //TODO ganti nama Company dari API
+      text = companyName, //TODO ganti nama Company dari API
       style = MaterialTheme.typography.h1,
       modifier = Modifier
         .fillMaxWidth()
@@ -54,13 +54,13 @@ fun NamecardView()
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       Text(
-        text = "Username", //TODO ganti Username dari API
+        text = username, //TODO ganti Username dari API
         style = MaterialTheme.typography.h2,
         color = Color.White,
         textDecoration = TextDecoration.Underline,
       )
       Text(
-        text = "Job Title", //TODO ganti Job Titlle dari API
+        text = jobTitle, //TODO ganti Job Titlle dari API
         style = MaterialTheme.typography.subtitle2,
         color = Color.White,
       )
@@ -68,11 +68,11 @@ fun NamecardView()
   }
 }
 
-@Preview
-@Composable
-fun NamecardPreview()
-{
-  DiNa_ComposeTheme(darkTheme = false) {
-    NamecardView()
-  }
-}
+//@Preview
+//@Composable
+//fun NamecardPreview()
+//{
+//  DiNa_ComposeTheme(darkTheme = false) {
+//    NamecardView()
+//  }
+//}

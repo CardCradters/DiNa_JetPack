@@ -34,10 +34,13 @@ import com.example.dina_compose.screen.home.HomeViewModel
 fun ClickableIcon(
   isStared: Boolean,
   onClick: () -> Unit
-) {
+)
+{
   Icon(
-    painter = painterResource(id = if (isStared) R.drawable.baseline_star_outline_24 else R.drawable
-      .baseline_star_25),
+    painter = painterResource(
+      id = if (isStared) R.drawable.baseline_star_outline_24 else R.drawable
+        .baseline_star_25
+    ),
     contentDescription = "Star",
     modifier = Modifier.clickable { onClick() }
   )
@@ -110,11 +113,8 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: HomeViewModel)
         viewModel.starred(context, user.uid, !user.stared)
       }
     }
+  }
 }
-
-}
-
-
 //@Composable
 //fun CardListItemPreview()
 //{

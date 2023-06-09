@@ -4,18 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.Card
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -29,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -56,14 +51,7 @@ fun Profile(
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  val brush =
-    androidx.compose.ui.graphics.Brush.linearGradient(
-      listOf(
-        Color(0xFF83B9E2),
-        Color(0xFFFFFFFF)
-      )
-    )
-  val contextForToast = LocalContext.current
+  val context = LocalContext.current
   val scrollState = rememberLazyListState()
   val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
   val placeholders = listOf(
@@ -75,16 +63,14 @@ fun Profile(
   )
 
   LaunchedEffect(Unit) {
-    viewModel.fetchProfile(contextForToast)
+    viewModel.fetchProfile(context)
   }
-
 
   Scaffold(
     scaffoldState = scaffoldState,
-    modifier = Modifier.background(brush),
+
     topBar = {
       TopAppBar {
-
         coroutineScope.launch {
           if (sheetState.bottomSheetState.isCollapsed)
           {
@@ -97,18 +83,18 @@ fun Profile(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast, navController = navController)
+      BottomBar(contextForToast = context, navController = navController)
     },
   ) { innerPadding ->
     BottomSheetScaffold(
       scaffoldState = sheetState,
-      sheetBackgroundColor = MaterialTheme.colors.background,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
       sheetContent = {
         BottomSheet(
           coroutineScope = coroutineScope,
           scaffoldState = sheetState,
-          contextForToast = contextForToast,viewModel = viewModel, navController=
+          contextForToast = context, viewModel = viewModel, navController =
           navController
         )
       },
@@ -128,14 +114,21 @@ fun Profile(
             Box(
               contentAlignment = Alignment.BottomCenter
             ) {
-              NamecardView()
-              ProfilePicture(contextForToast, viewModel = ProfileViewModel())
+              NamecardView(
+                companyName = profile?.workplace ?: "",
+                username = profile?.name ?: "",
+                jobTitle = profile?.job_title ?: ""
+              )
+//              ProfilePicture(contextForToast, viewModel = ProfileViewModel())
+              ProfilePicture(showIconButton = true)
             }
 
             Card(
               modifier = Modifier
                 .padding(top = 66.dp)
-                .fillMaxWidth().background(Color(0xFFD1D1D1)),
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+                .background(Color(0xFFD1D1D1)),
               shape = RoundedCornerShape(8.dp),
               elevation = 5.dp,
             ) {
@@ -146,16 +139,17 @@ fun Profile(
                 verticalArrangement = Arrangement.Center,
               ) {
                 Text(
-                  profile?.name ?: "",
+                  profile?.phoneNumber ?: "",
                   style = MaterialTheme.typography.subtitle1
                 )
 
                 Text(
-                  profile?.phoneNumber ?: "",
+                  profile?.email ?: "",
                   modifier = Modifier.padding(top = 8.dp),
                   style = MaterialTheme.typography.subtitle2
                 )
-              }}
+              }
+            }
 
             Box(
               modifier = Modifier
@@ -187,10 +181,10 @@ fun Profile(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                       ) {
-                        DetailProfile(times = 5, placeholderTexts = placeholders as List<String>,
+                        DetailProfile(
+                          times = 5, placeholderTexts = placeholders as List<String>,
                           viewModel = HomeViewModel()
                         )
-
                       }
                     }
                   }
@@ -200,5 +194,6 @@ fun Profile(
           }
         }
       })
-  }}
+  }
+}
 

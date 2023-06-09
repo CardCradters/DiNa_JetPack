@@ -66,6 +66,7 @@ fun UserDetail(
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
   val scrollState = rememberLazyListState()
+
   val users by viewModel.users.collectAsState(emptyList())
 
   val value = listOf("Email", "Telephone", "FAX", "Mobile", "Website")
@@ -78,6 +79,7 @@ fun UserDetail(
   )
 
   LaunchedEffect(Unit) {
+    viewModel.fetchProfile(context)
     viewModel.fetchUsers(context)
   }
 
@@ -130,8 +132,12 @@ fun UserDetail(
               modifier = Modifier,
               contentAlignment = Alignment.BottomCenter
             ) {
-              NamecardView()
-              ProfilePicture()
+              NamecardView(
+                companyName = "PT EXAMPLE JAYA ABADI",
+                username = "Username",
+                jobTitle = "Job Title"
+              )
+              ProfilePicture(showIconButton = false)
             }
             Card(
               modifier = Modifier

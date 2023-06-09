@@ -37,7 +37,7 @@ import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 import com.example.dina_compose.ui.theme.verticalGradientBrush
 
 @Composable
-fun ProfilePicture()
+fun ProfilePicture(showIconButton: Boolean)
 {
   val context = LocalContext.current.applicationContext
   Box(
@@ -55,21 +55,24 @@ fun ProfilePicture()
         .shadow(elevation = 5.dp)
         .background(color = Color.Gray)
     )
-    IconButton(
-      onClick = {
-        Toast.makeText(context, "Click!", Toast.LENGTH_SHORT).show()
+    if (showIconButton)
+    {
+      IconButton(
+        onClick = {
+          Toast.makeText(context, "Click!", Toast.LENGTH_SHORT).show()
+        }
+      ) {
+        Icon(
+          modifier = Modifier
+            .clip(shape = CircleShape)
+            .background(color = Color.Black)
+            .border(width = 1.dp, color = Color.White, shape = CircleShape)
+            .padding(4.dp),
+          imageVector = Icons.Outlined.Edit,
+          tint = Color.White,
+          contentDescription = "Edit"
+        )
       }
-    ) {
-      Icon(
-        modifier = Modifier
-          .clip(shape = CircleShape)
-          .background(color = Color.Black)
-          .border(width = 1.dp, color = Color.White, shape = CircleShape)
-          .padding(4.dp),
-        imageVector = Icons.Outlined.Edit,
-        tint = Color.White,
-        contentDescription = "Edit"
-      )
     }
   }
 }

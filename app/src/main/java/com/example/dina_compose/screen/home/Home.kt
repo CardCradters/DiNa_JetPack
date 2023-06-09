@@ -41,6 +41,7 @@ import com.example.dina_compose.component.CardListItem
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.data.ProfileRequest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -54,11 +55,14 @@ fun Home(
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
   val scrollState = rememberLazyListState()
+
+  val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
   val users by viewModel.users.collectAsState(emptyList())
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
   var queryState by remember { mutableStateOf("") }
 
   LaunchedEffect(Unit) {
+    viewModel.fetchProfile(context)
     viewModel.fetchUsers(context)
   }
 
@@ -110,7 +114,11 @@ fun Home(
               queryState = query
               viewModel.performSearch(context, query) // Call performSearch in the view model
             })
-            NamecardView()
+            NamecardView(
+              companyName = profile?.workplace ?: "",
+              username = profile?.name ?: "",
+              jobTitle = profile?.job_title ?: ""
+            )
             Text(
               "Digitize Your Network",
               fontSize = 24.sp,

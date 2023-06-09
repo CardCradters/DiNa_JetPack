@@ -36,7 +36,11 @@ import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.home.HomeViewModel
 
 @Composable
-fun DetailProfile(times: Int, placeholderTexts: List<String>, viewModel:HomeViewModel)
+fun DetailProfile(
+  times: Int,
+  placeholderTexts: List<String>,
+  viewModel: HomeViewModel
+)
 {
   val focusManager = LocalFocusManager.current
   var compValue by remember { mutableStateOf("") }
@@ -60,9 +64,11 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>, viewModel:HomeView
       textStyle = MaterialTheme.typography.subtitle1.copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        val companyText = if (profile?.workplace.isNullOrEmpty()) {
+        val companyText = if (profile?.workplace.isNullOrEmpty())
+        {
           "Company"
-        } else {
+        } else
+        {
           profile?.workplace
         }
         companyText?.let {
@@ -103,9 +109,11 @@ fun DetailProfile(times: Int, placeholderTexts: List<String>, viewModel:HomeView
         .copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        val addresText = if (profile?.addressCompany.isNullOrEmpty()) {
+        val addresText = if (profile?.addressCompany.isNullOrEmpty())
+        {
           "Address Company"
-        } else {
+        } else
+        {
           profile?.addressCompany
         }
         addresText?.let {
