@@ -42,6 +42,7 @@ import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
 import com.example.dina_compose.screen.profile.ProfileViewModel
+import com.example.dina_compose.screen.user_detail.UserDetailViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -150,7 +151,7 @@ fun Home(
                   } else {
                     val itemsToDisplay = if (queryState.isEmpty()) users else searchResult
                     items(itemsToDisplay) { user ->
-                      CardListItem(user = user, context = context, viewModel = viewModel)
+                      CardListItem(user,context, viewModel= UserDetailViewModel(), navController)
                     }
                   }
                 }
@@ -163,22 +164,3 @@ fun Home(
   }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun HomePreview()
-//{
-//  val navController = rememberNavController()
-//  val viewModel = HomeViewModel()
-//
-//  DiNa_ComposeTheme(darkTheme = false) { // A surface container using the
-//    // 'background' color from the theme
-//    Surface(
-//      modifier = Modifier
-//        .fillMaxSize()
-//        .background(brush = verticalGradientBrush),
-//      color = Color.Transparent,
-//    ) {
-//      Home(navController = navController, viewModel = viewModel)
-//    }
-//  }
-//}

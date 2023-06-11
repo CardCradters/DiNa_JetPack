@@ -88,7 +88,6 @@ object ApiConfig {
 
     val retrofitBuilder = Retrofit.Builder()
       .baseUrl(BuildConfig.BASE_URL)
-      .addConverterFactory(ScalarsConverterFactory.create())
       .addConverterFactory(
         GsonConverterFactory
           .create(

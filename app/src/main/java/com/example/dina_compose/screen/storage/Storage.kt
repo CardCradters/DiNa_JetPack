@@ -158,15 +158,33 @@ fun Storage(
                   verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                   state = scrollState
                 ) {
-//                  if (allCard.isEmpty() && queryState.isEmpty()) {
-//                    item {
-//                      Text(
-//                        text = "Anda belum pernah menyimpan 1 pun kontak",
-//                        modifier = Modifier.fillMaxWidth(),
-//                        textAlign = TextAlign.Center
-//                      )
-//                    }
-//                  } else {
+                  if (allCard.isEmpty() && queryState.isEmpty()) {
+                    item {
+                      Text(
+                        text = "Anda belum pernah menyimpan 1 pun kontak",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                      )
+                    }
+                  } else {
+                    if (starCard.isEmpty() && queryState.isEmpty()) {
+                      item {
+                        Text(
+                          text = "Anda belum pernah menyimpan 1 pun kontak",
+                          modifier = Modifier.fillMaxWidth(),
+                          textAlign = TextAlign.Center
+                        )
+                      }
+                    } else{
+                      if (companyCard.isEmpty() && queryState.isEmpty()) {
+                        item {
+                          Text(
+                            text = "Anda belum pernah menyimpan 1 pun kontak",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                          )
+                        }
+                    } else{
                     val itemsToDisplay = if (queryState.isEmpty()) {
                       when (selectedIndex) {
                         0 -> allCard
@@ -178,13 +196,30 @@ fun Storage(
                       searchCard
                     }
                     items(itemsToDisplay) { user ->
-                      categoryListItem(user = user, context = context, viewModel = viewModel)
+                      categoryListItem(user,context, viewModel, navController)
                     }
                   }
                 }
               }
             }
           }
-        })
+        }
       }
-  }
+  }})}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

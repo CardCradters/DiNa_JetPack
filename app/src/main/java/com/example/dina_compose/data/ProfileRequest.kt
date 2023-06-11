@@ -34,3 +34,11 @@ data class ProfileRequest(
   @SerializedName("storagePath")
   val storagePath: String,
   )
+//
+//{
+//  // Implementasi lain dari kelas ProfileRequest
+//
+//  fun getDatas(): ProfileRequest {
+//    return this
+//  }
+//}

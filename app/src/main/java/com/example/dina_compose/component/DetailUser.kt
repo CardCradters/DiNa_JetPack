@@ -34,20 +34,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import com.example.dina_compose.R
 import com.example.dina_compose.data.ProfileRequest
-import com.example.dina_compose.screen.profile.ProfileViewModel
+import com.example.dina_compose.data.StaredRequest
+import com.example.dina_compose.screen.user_detail.UserDetailViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun DetailProfile(times: Int, placeholderTexts:
-List<String>, viewModel:ProfileViewModel)
+fun DetailUser(times: Int, placeholderTexts: List<String>, viewModel:
+UserDetailViewModel, )
 {
-  var postSuccess by remember { mutableStateOf(false) }
-  val context = LocalContext.current
   val focusManager = LocalFocusManager.current
+  val context = LocalContext.current
   var compValue by remember { mutableStateOf("") }
   var addrValue by remember { mutableStateOf("") }
-  val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
+  val userDetail: ProfileRequest? by viewModel.userDetail.collectAsState(null)
   val textFieldValues = remember { mutableStateListOf<String>() }
   val icons = listOf(
     painterResource(id = R.drawable.baseline_alternate_email_24),
@@ -66,10 +68,10 @@ List<String>, viewModel:ProfileViewModel)
       textStyle = MaterialTheme.typography.subtitle1.copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        val companyText = if (profile?.workplace.isNullOrEmpty()) {
+        val companyText = if (userDetail?.workplace.isNullOrEmpty()) {
           "Company"
         } else {
-          profile?.workplace
+          userDetail?.workplace
         }
         companyText?.let {
           Text(
@@ -95,7 +97,8 @@ List<String>, viewModel:ProfileViewModel)
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
-      )
+      ),
+          enabled = false // Disable the TextField
     )
 
     TextField(
@@ -109,10 +112,10 @@ List<String>, viewModel:ProfileViewModel)
         .copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        val addresText = if (profile?.addressCompany.isNullOrEmpty()) {
+        val addresText = if (userDetail?.addressCompany.isNullOrEmpty()) {
           "Address Company"
         } else {
-          profile?.addressCompany
+          userDetail?.addressCompany
         }
         addresText?.let {
           Text(
@@ -138,7 +141,8 @@ List<String>, viewModel:ProfileViewModel)
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
-      )
+      ),
+      enabled = false // Disable the TextField
     )
 
     repeat(times) { index ->
@@ -198,9 +202,9 @@ List<String>, viewModel:ProfileViewModel)
           focusedIndicatorColor = Color.Transparent,
           unfocusedIndicatorColor = Color.Transparent,
           disabledIndicatorColor = Color.Transparent
-        )
+        ),
+        enabled = false // Disable the TextField
       )
-    }
       Divider(
         modifier = Modifier.fillMaxWidth(),
         color = Color.Black,
@@ -213,39 +217,30 @@ List<String>, viewModel:ProfileViewModel)
         .height(72.dp),
       color = Color.Transparent
     )
+  }
   Button(
     onClick = {
-      val job_title = ""
-      val workplace = compValue
-      val addressCompany = addrValue
-      val emailCompany = textFieldValues.getOrNull(0) ?: ""
-      val phoneTelpCompany = ""
-      val phoneFaxCompany = textFieldValues.getOrNull(1) ?: ""
-      val phoneMobileCompany = textFieldValues.getOrNull(2) ?: ""
-      val workplaceUri = textFieldValues.getOrNull(3) ?: ""
 
-      viewModel.postProfile(
-        context,
-        job_title  = job_title,
-        workplace = workplace,
-        addressCompany = addressCompany,
-        emailCompany = emailCompany,
-        phoneTelpCompany = phoneTelpCompany,
-        phoneFaxCompany = phoneFaxCompany,
-        phoneMobileCompany = phoneMobileCompany,
-        workplaceUri = workplaceUri,
-      ) { success, message ->
-        if (success) {
-          postSuccess=success
-        } else {
-          Log.e("Profile", "Post profile failed: $message")
+      viewModel.viewModelScope.launch {
+        val uid = userDetail?.uid
+        val staredRequest =
+          uid?.let { StaredRequest(uid = it) } // ganti dengan data yang sesuai
+        try {
+          if (uid != null)
+          {
+            if (staredRequest != null)
+            {
+              viewModel.saveUser(uid, staredRequest,context)
+            }
+          }
+        } catch (e: Exception) {
+          Log.e("Profile", "Save user failed: ${e.message}")
         }
       }
     },
     modifier = Modifier.padding(top = 16.dp)
   ) {
-    Text(text = "Submit")
+    Text(text = "Save")
   }
 
 }
-

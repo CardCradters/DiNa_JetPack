@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.dina_compose.R
 import com.example.dina_compose.data.UserRequest
 import com.example.dina_compose.screen.storage.StorageViewModel
@@ -33,11 +35,16 @@ import com.example.dina_compose.screen.storage.StorageViewModel
 
 @Composable
 fun categoryListItem(user: UserRequest, context: Context, viewModel:
-StorageViewModel)
+StorageViewModel, navController : NavController)
 {
   Card(
     Modifier
       .clickable {
+        navController.navigate("detail_screen/${user.uid}") {
+          // Kirim data pengguna sebagai argumen
+          launchSingleTop = true
+          restoreState = true
+        }
         Toast
           .makeText(context, "Card List Clicked", Toast.LENGTH_SHORT)
           .show()
@@ -60,14 +67,23 @@ StorageViewModel)
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
         Image(
-          painter = painterResource(id = R.drawable.baseline_account_circle_24),
+          painter = if (!user.filename.isNotEmpty()) {
+            rememberImagePainter(data = user.filename)
+          } else {
+            painterResource(id = R.drawable.baseline_account_circle_24)
+          },
           contentDescription = "Profile Picture",
-          Modifier
+          modifier = Modifier
             .clip(shape = CircleShape)
             .size(60.dp)
             .background(color = MaterialTheme.colors.primary)
-//              .fillMaxHeight(),
+            .border(
+              width = 2.dp,
+              color = MaterialTheme.colors.secondary,
+              shape = CircleShape
+            )
         )
+
         Column(
           Modifier
             .padding(start = 8.dp),

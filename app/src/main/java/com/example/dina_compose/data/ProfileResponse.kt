@@ -8,7 +8,10 @@ data class ProfileResponse(
 	val payloadx: PayloadX,
 
 	@SerializedName("message")
-	val message: String
+	val message: String,
+
+  @SerializedName("image")
+  val image: String,
 )
 
 data class PayloadX(

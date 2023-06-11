@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dina_compose.data.ProfileRequest
+import com.example.dina_compose.data.UserRequest
 import com.example.dina_compose.screen.auth.Login
 import com.example.dina_compose.screen.auth.Register
 import com.example.dina_compose.screen.bottomsheet.About
@@ -12,6 +13,7 @@ import com.example.dina_compose.screen.home.Home
 import com.example.dina_compose.screen.profile.Profile
 import com.example.dina_compose.screen.splash.SplashScreen
 import com.example.dina_compose.screen.storage.Storage
+import com.example.dina_compose.screen.user_detail.UserDetail
 
 @Composable
 fun AppNavigation()
@@ -44,6 +46,16 @@ fun AppNavigation()
         navController = navController
       )
     }
+    composable("detail_screen/{uid}/{name}") { backStackEntry ->
+      val uid = backStackEntry.arguments?.getString("uid")
+      val name = backStackEntry.arguments?.getString("name")
+      UserDetail(
+        navController = navController,
+        uid = uid,
+        name = name
+      )
+    }
+    }
   }
-}
+
 
