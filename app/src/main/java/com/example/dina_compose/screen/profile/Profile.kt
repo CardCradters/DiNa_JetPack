@@ -22,7 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,6 +65,8 @@ fun Profile(
     "Website"
   )
 
+  var openDialog by remember { mutableStateOf(false) }
+
   LaunchedEffect(Unit) {
     viewModel.fetchProfile(contextForToast)
 
@@ -85,12 +90,12 @@ fun Profile(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast, navController = navController)
+      BottomBar(contextForToast = contextForToast, navController = navController, onShareClicked = { openDialog = true })
     },
   ) { innerPadding ->
     BottomSheetScaffold(
       scaffoldState = sheetState,
-      sheetBackgroundColor = MaterialTheme.colors.background,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
       sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
       sheetContent = {
         BottomSheet(

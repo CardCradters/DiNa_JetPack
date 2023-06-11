@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.dina_compose.component.Barcode
 import com.example.dina_compose.component.BottomBar
 import com.example.dina_compose.component.BottomSheet
 import com.example.dina_compose.component.CardListItem
@@ -60,6 +61,8 @@ fun Home(
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
   var queryState by remember { mutableStateOf("") }
 
+  var openDialog by remember { mutableStateOf(false) }
+
   LaunchedEffect(Unit) {
     viewModel.fetchUsers(context)
   }
@@ -79,7 +82,7 @@ fun Home(
       }
     },
     bottomBar = {
-      BottomBar(navController = navController,contextForToast = context)
+      BottomBar(navController = navController,contextForToast = context,onShareClicked = { openDialog = true })
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -97,6 +100,11 @@ fun Home(
       },
       content = {
         //    Activity
+        if (openDialog) {
+          Barcode {
+            openDialog = false
+          }
+        }
         Column(
           modifier = Modifier
             .padding(innerPadding)

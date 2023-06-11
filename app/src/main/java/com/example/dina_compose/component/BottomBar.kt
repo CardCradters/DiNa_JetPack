@@ -17,7 +17,7 @@ import androidx.navigation.NavHostController
 import com.example.dina_compose.R
 
 @Composable
-fun BottomBar(navController: NavHostController, contextForToast: Context)
+fun BottomBar(navController: NavHostController, contextForToast: Context,onShareClicked: () -> Unit)
 {
   // items list
   val bottomMenuItemsList = prepareBottomMenu()
@@ -31,11 +31,12 @@ fun BottomBar(navController: NavHostController, contextForToast: Context)
         selected = (selectedItem == menuItem.label),
         onClick = {
           selectedItem = menuItem.label
-          Toast.makeText(contextForToast, menuItem.label, Toast.LENGTH_SHORT).show()
+          Toast.makeText(contextForToast, menuItem.label, Toast.LENGTH_SHORT)
           when (menuItem.label) {
             "Home" -> navController.navigate("home_screen")
             "Profile" -> navController.navigate("profile_screen")
             "Storage" -> navController.navigate("storage_screen")
+            "Share" -> onShareClicked()
             else -> Unit
           }
         },
