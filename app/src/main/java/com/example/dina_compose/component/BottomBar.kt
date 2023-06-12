@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.example.dina_compose.R
-
 @Composable
 fun BottomBar(navController: NavHostController, contextForToast: Context,onShareClicked: () -> Unit)
 {
@@ -36,6 +35,7 @@ fun BottomBar(navController: NavHostController, contextForToast: Context,onShare
             "Home" -> navController.navigate("home_screen")
             "Profile" -> navController.navigate("profile_screen")
             "Storage" -> navController.navigate("storage_screen")
+            "Add" -> navController.navigate("scan_screen")
             "Share" -> onShareClicked()
             else -> Unit
           }
@@ -74,4 +74,3 @@ private fun prepareBottomMenu(): List<BottomMenuItem>
 }
 
 data class BottomMenuItem(val label: String, val icon: Painter)
-

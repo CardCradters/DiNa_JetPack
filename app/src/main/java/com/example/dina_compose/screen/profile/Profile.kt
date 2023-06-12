@@ -43,6 +43,7 @@ import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.ProfilePicture
 import com.example.dina_compose.component.TopAppBar
 import com.example.dina_compose.data.ProfileRequest
+import com.example.dina_compose.data.UploadRequest
 import com.example.dina_compose.screen.home.HomeViewModel
 import kotlinx.coroutines.launch
 
@@ -124,9 +125,7 @@ fun Profile(
               contentAlignment = Alignment.BottomCenter
             ) {
               NamecardView(viewModel = viewModel)
-              ProfilePicture(viewModel = viewModel, profileRequest =
-              ProfileRequest("","","","","","","" +
-                  "","","","","","","","",""))
+              ProfilePicture(viewModel = viewModel, uploadRequest = UploadRequest(""))
             }
 
             Card(
