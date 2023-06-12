@@ -14,13 +14,16 @@ import com.example.dina_compose.data.PostProfileRequest
 import com.example.dina_compose.data.PostProfileResponse
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.data.UploadRequest
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.net.URL
 
 class ProfileViewModel : ViewModel()
 {
@@ -28,8 +31,9 @@ class ProfileViewModel : ViewModel()
   val profile: StateFlow<ProfileRequest?> = _profile
   private val _updateProfileResult = MutableLiveData<PostProfileResponse?>()
   val updateProfileResult: MutableLiveData<PostProfileResponse?> = _updateProfileResult
-  private val _profilePicture = MutableStateFlow<String?>(null)
-  val profilePicture: StateFlow<String?> = _profilePicture
+  private val _profilePicture = MutableStateFlow<Bitmap?>(null)
+  val profilePicture: StateFlow<Bitmap?> = _profilePicture
+
 
 
   fun loadProfilePicture(context: Context, file: File, uploadRequest: UploadRequest) {
@@ -42,14 +46,23 @@ class ProfileViewModel : ViewModel()
 
     viewModelScope.launch {
       when (val result =
-        safeApiCall { ApiConfig.apiService(context).postUpload(filePart) }) {
+        safeApiCall { ApiConfig.apiService(context).postUpload(filePart, filename) }) {
         DataState.Loading -> Unit
         is DataState.Error -> Log.e("Error", result.message)
         is DataState.Result -> {
           val responseBody = result.data
           if (responseBody == "File successfully added") {
-            val imageUrl = "https://example.com/images/${uploadRequest.filename}"
-            _profilePicture.value = imageUrl
+            val bitmap = convertFileToBitmap(file)
+            bitmap?.let {
+              val imageUrl = "https://example.com/images/${uploadRequest.filename}"
+              _profilePicture.value = bitmap
+              // Menggunakan bitmap untuk keperluan lain
+              // misalnya menampilkan gambar di UI
+              // atau mengunggah ke penyimpanan lokal
+              // atau operasi lain yang memerlukan bitmap
+
+
+            }
           } else {
             Log.e("Error", "Failed to upload file")
           }
@@ -114,7 +127,24 @@ class ProfileViewModel : ViewModel()
       is DataState.Result ->  _updateProfileResult.postValue(result.data)
     }
   }
+
+  fun fetchProfilePicture(context: Context, imageUrl: String) = viewModelScope.launch {
+    val bitmap = try {
+      withContext(Dispatchers.IO) {
+        val inputStream = URL(imageUrl).openStream()
+        BitmapFactory.decodeStream(inputStream)
+      }
+    } catch (e: Exception) {
+      Log.e("Error", "Failed to fetch profile picture: ${e.message}")
+      null
+    }
+
+    _profilePicture.value = bitmap
+  }
+
 }
+
+
 
 private fun <T> MutableLiveData<T>.postValue(data: PostProfileResponse)
 {

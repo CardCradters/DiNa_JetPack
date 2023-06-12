@@ -8,6 +8,7 @@ import com.example.dina_compose.data.RegisResponse
 import com.example.dina_compose.data.StaredRequest
 import com.example.dina_compose.data.UserResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -56,7 +57,8 @@ interface ApiService
   @Multipart
   @POST("v1/upload")
   suspend fun postUpload(
-    @Part file: MultipartBody.Part
+    @Part file: MultipartBody.Part,
+    @Part("filename") filename: RequestBody
   ): Response<Any>
 
   @POST("v1/auth/signup")

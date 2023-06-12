@@ -36,6 +36,8 @@ fun BottomBar(navController: NavHostController, contextForToast: Context)
             "Home" -> navController.navigate("home_screen")
             "Profile" -> navController.navigate("profile_screen")
             "Storage" -> navController.navigate("storage_screen")
+            "Share" -> navController.navigate("share_screen")
+            "Add" -> navController.navigate("scan_screen")
             else -> Unit
           }
         },

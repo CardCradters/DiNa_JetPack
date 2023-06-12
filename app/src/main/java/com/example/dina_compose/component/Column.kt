@@ -17,24 +17,27 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.example.dina_compose.R
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.data.UploadRequest
 import com.example.dina_compose.screen.profile.ProfileViewModel
 import java.io.File
 
 @Composable
-fun ProfilePicture(viewModel: ProfileViewModel, profileRequest: ProfileRequest ) {
-//  val profilePicture by viewModel.profilePicture.collectAsState(null)
+fun ProfilePicture(viewModel: ProfileViewModel, uploadRequest: UploadRequest ) {
+  val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
   val context = LocalContext.current
   val galleryLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.GetContent()
@@ -45,19 +48,21 @@ fun ProfilePicture(viewModel: ProfileViewModel, profileRequest: ProfileRequest )
       file.outputStream().use { outputStream ->
         inputStream?.copyTo(outputStream)
       }
-      val uploadRequest = UploadRequest(
-        filename = "profile_picture.jpg"
-      )
       // Kirim part ke ViewModel untuk mengunggah gambar ke backend
       viewModel.loadProfilePicture(context, file, uploadRequest)
     }
   }
 
-  val painter = run {
-    if (!profileRequest.filename.isNullOrEmpty()) {
-      rememberImagePainter(data = profileRequest.filename)
-    } else {
-      painterResource(id = R.drawable.baseline_account_circle_24)
+
+  val imageUrl = uploadRequest.filename
+  val profilePictureBitmap by viewModel.profilePicture.collectAsState()
+
+  LaunchedEffect(imageUrl) {
+    if (profilePictureBitmap == null) {
+      Glide.with(context)
+        .load(imageUrl)
+        .apply(RequestOptions.circleCropTransform())
+//        .into(_profilePicture)
     }
   }
 
@@ -67,7 +72,7 @@ fun ProfilePicture(viewModel: ProfileViewModel, profileRequest: ProfileRequest )
     contentAlignment = Alignment.BottomEnd,
   ) {
     Image(
-      painter = painter,
+      painter = rememberImagePainter(data = imageUrl),
       contentDescription = "Profile Picture",
       modifier = Modifier
         .size(140.dp)
@@ -95,3 +100,13 @@ fun ProfilePicture(viewModel: ProfileViewModel, profileRequest: ProfileRequest )
     }
   }
 }
+//private fun convertUrlToBitmap(url: String): Bitmap? {
+//  return try {
+//    val inputStream = URL(url).openStream()
+//    BitmapFactory.decodeStream(inputStream)
+//  } catch (e: Exception) {
+//    Log.e("Error", "Failed to convert URL to bitmap: ${e.message}")
+//    null
+//  }
+//}
+

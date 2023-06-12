@@ -22,12 +22,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dina_compose.R
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.profile.ProfileViewModel
-import com.example.dina_compose.ui.theme.DiNa_ComposeTheme
 
 @Composable
 fun NamecardView(viewModel: ProfileViewModel)
@@ -98,11 +96,3 @@ fun NamecardView(viewModel: ProfileViewModel)
   }
 }}}}
 
-//@Preview
-//@Composable
-//fun NamecardPreview()
-//{
-//  DiNa_ComposeTheme(darkTheme = false) {
-//    NamecardView()
-//  }
-//}
