@@ -55,12 +55,14 @@ import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.home.HomeViewModel
 import com.example.dina_compose.screen.profile.ProfileViewModel
 import kotlinx.coroutines.launch
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Storage(
   navController: NavHostController,
   viewModel: StorageViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-) {
+)
+{
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
@@ -70,9 +72,10 @@ fun Storage(
   val starCard by viewModel.starCard.collectAsState(emptyList())
   val companyCard by viewModel.companyCard.collectAsState(emptyList())
   val searchCard by viewModel.searchCard.collectAsState(emptyList())
-
   var queryState by remember { mutableStateOf("") }
   var selectedIndex by remember { mutableIntStateOf(0) }
+
+  var openDialog by remember { mutableStateOf(false) }
 
   LaunchedEffect(Unit) {
     viewModel.fetchAllCard(context)
@@ -83,16 +86,18 @@ fun Storage(
     topBar = {
       TopAppBar {
         coroutineScope.launch {
-          if (sheetState.bottomSheetState.isCollapsed) {
+          if (sheetState.bottomSheetState.isCollapsed)
+          {
             sheetState.bottomSheetState.expand()
-          } else {
+          } else
+          {
             sheetState.bottomSheetState.collapse()
           }
         }
       }
     },
     bottomBar = {
-      BottomBar(navController = navController, contextForToast = context)
+      BottomBar(navController = navController, contextForToast = context, onShareClicked = { openDialog = true })
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -132,7 +137,8 @@ fun Storage(
               selectedIndex = selectedIndex,
               onCategorySelected = { index ->
                 selectedIndex = index
-                when (index) {
+                when (index)
+                {
                   0 -> viewModel.fetchAllCard(context)
                   1 -> viewModel.fetchStarCard(context)
                   2 -> viewModel.fetchCompanyCard(context)
@@ -148,7 +154,8 @@ fun Storage(
                   .fillMaxSize()
               ) {
                 Text(
-                  text = when (selectedIndex) {
+                  text = when (selectedIndex)
+                  {
                     0 -> "All Namecard"
                     1 -> "Star Namecard"
                     2 -> "Company Namecard"
@@ -166,7 +173,8 @@ fun Storage(
                   verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                   state = scrollState
                 ) {
-                  if (allCard.isEmpty() && queryState.isEmpty()) {
+                  if (allCard.isEmpty() && queryState.isEmpty())
+                  {
                     item {
                       Text(
                         text = "Anda belum pernah menyimpan 1 pun kontak",
@@ -174,8 +182,10 @@ fun Storage(
                         textAlign = TextAlign.Center
                       )
                     }
-                  } else {
-                    if (starCard.isEmpty() && queryState.isEmpty()) {
+                  } else
+                  {
+                    if (starCard.isEmpty() && queryState.isEmpty())
+                    {
                       item {
                         Text(
                           text = "Anda belum pernah menyimpan 1 pun kontak",
@@ -183,8 +193,10 @@ fun Storage(
                           textAlign = TextAlign.Center
                         )
                       }
-                    } else{
-                      if (companyCard.isEmpty() && queryState.isEmpty()) {
+                    } else
+                    {
+                      if (companyCard.isEmpty() && queryState.isEmpty())
+                      {
                         item {
                           Text(
                             text = "Anda belum pernah menyimpan 1 pun kontak",
@@ -192,19 +204,25 @@ fun Storage(
                             textAlign = TextAlign.Center
                           )
                         }
-                    } else{
-                    val itemsToDisplay = if (queryState.isEmpty()) {
-                      when (selectedIndex) {
-                        0 -> allCard
-                        1 -> starCard
-                        2 -> companyCard
-                        else -> emptyList()
+                      } else
+                      {
+                        val itemsToDisplay = if (queryState.isEmpty())
+                        {
+                          when (selectedIndex)
+                          {
+                            0 -> allCard
+                            1 -> starCard
+                            2 -> companyCard
+                            else -> emptyList()
+                          }
+                        } else
+                        {
+                          searchCard
+                        }
+                        items(itemsToDisplay) { user ->
+                          categoryListItem(user, context, viewModel, navController)
+                        }
                       }
-                    } else {
-                      searchCard
-                    }
-                    items(itemsToDisplay) { user ->
-                      categoryListItem(user,context, viewModel, navController)
                     }
                   }
                 }
@@ -213,7 +231,9 @@ fun Storage(
           }
         }
       }
-  }})}}
+    )
+  }
+}
 
 
 
