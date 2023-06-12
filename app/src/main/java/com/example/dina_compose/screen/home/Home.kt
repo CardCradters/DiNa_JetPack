@@ -67,7 +67,7 @@ fun Home(
   val users by viewModel.users.collectAsState(emptyList())
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
   var queryState by remember { mutableStateOf("") }
-
+  var openDialog by remember { mutableStateOf(false) }
   LaunchedEffect(Unit) {
     viewModel.fetchUsers(context)
   }
@@ -87,7 +87,7 @@ fun Home(
       }
     },
     bottomBar = {
-      BottomBar(navController = navController,contextForToast = context)
+      BottomBar(navController = navController,contextForToast = context, onShareClicked = { openDialog = true })
     },
   ) { innerPadding ->
     BottomSheetScaffold(
