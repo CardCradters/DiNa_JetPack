@@ -65,7 +65,6 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
   val userDetail by viewModel.userDetail.collectAsState()
 
 
-
   Card(
     Modifier
       .clickable {
@@ -74,7 +73,7 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
           popUpTo(navController.graph.findStartDestination().id) {
             saveState = true
           }
-        }?:   logMessage("User detail not available")
+        } ?: logMessage("User detail not available")
       }
       .wrapContentHeight()
       .fillMaxWidth(),
@@ -109,7 +108,8 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
 
         Column(
           Modifier
-            .padding(start = 8.dp),
+            .padding(start = 8.dp)
+            .weight(1f),
 //              .fillMaxHeight(),
           verticalArrangement = Arrangement.Center
         ) {
@@ -131,20 +131,20 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
             fontWeight = FontWeight.Normal
           )
         }
-      }
-      ClickableIcon(
-        isStared = user.stared
-      ) {
-        viewModel.starred(
-          context = context,
-          uid = user.uid,
+        ClickableIcon(
+          isStared = user.stared
+        ) {
+          viewModel.starred(
+            context = context,
+            uid = user.uid,
 //          name = user.name,
 //          job_title = user.job_title,
 //          workplace = user.workplace,
 //          isStarred = !user.stared,
 //          filename = user.filename ?: "",
 //          storagePath = user.storagePath,
-        )
+          )
+        }
       }
     }
   }

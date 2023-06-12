@@ -42,14 +42,17 @@ import com.example.dina_compose.screen.user_detail.UserDetailViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun DetailUser(times: Int, placeholderTexts: List<String>, viewModel:
-UserDetailViewModel, )
+fun DetailUser(
+  times: Int, placeholderTexts: List<String>,
+  viewModel:
+  UserDetailViewModel,
+)
 {
   val focusManager = LocalFocusManager.current
   val context = LocalContext.current
+  val userDetail: ProfileRequest? by viewModel.userDetail.collectAsState(null)
   var compValue by remember { mutableStateOf("") }
   var addrValue by remember { mutableStateOf("") }
-  val userDetail: ProfileRequest? by viewModel.userDetail.collectAsState(null)
   val textFieldValues = remember { mutableStateListOf<String>() }
   val icons = listOf(
     painterResource(id = R.drawable.baseline_alternate_email_24),
@@ -61,26 +64,38 @@ UserDetailViewModel, )
 
   Column {
     TextField(
-      value = compValue,
+      value = userDetail?.workplace ?: compValue,
       onValueChange = { compValue = it },
       shape = RoundedCornerShape(0.dp),
       modifier = Modifier.fillMaxWidth(),
-      textStyle = MaterialTheme.typography.subtitle1.copy(textAlign = TextAlign.Center),
+      textStyle = MaterialTheme.typography.subtitle1.copy(
+        textAlign = TextAlign.Center,
+        color = Color.Black
+      ),
       singleLine = true,
       placeholder = {
-        val companyText = if (userDetail?.workplace.isNullOrEmpty()) {
-          "Company"
-        } else {
-          userDetail?.workplace
-        }
-        companyText?.let {
-          Text(
-            text = it,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.body1
-          )
-        }
+        Text(
+          text = "Company",
+          modifier = Modifier.fillMaxWidth(),
+          textAlign = TextAlign.Center,
+          style = MaterialTheme.typography.body1
+        )
+
+//        val companyText = if (userDetail?.workplace.isNullOrEmpty())
+//        {
+//          "Company"
+//        } else
+//        {
+//          userDetail?.workplace
+//        }
+//        companyText?.let {
+//          Text(
+//            text = it,
+//            modifier = Modifier.fillMaxWidth(),
+//            textAlign = TextAlign.Center,
+//            style = MaterialTheme.typography.body1
+//          )
+//        }
       },
       keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
@@ -98,7 +113,7 @@ UserDetailViewModel, )
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
       ),
-          enabled = false // Disable the TextField
+      enabled = false // Disable the TextField
     )
 
     TextField(
@@ -112,9 +127,11 @@ UserDetailViewModel, )
         .copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        val addresText = if (userDetail?.addressCompany.isNullOrEmpty()) {
+        val addresText = if (userDetail?.addressCompany.isNullOrEmpty())
+        {
           "Address Company"
-        } else {
+        } else
+        {
           userDetail?.addressCompany
         }
         addresText?.let {
@@ -214,26 +231,27 @@ UserDetailViewModel, )
     Divider(
       modifier = Modifier
         .fillMaxWidth()
-        .height(72.dp),
+        .height(24.dp),
       color = Color.Transparent
     )
   }
   Button(
     onClick = {
-
       viewModel.viewModelScope.launch {
         val uid = userDetail?.uid
         val staredRequest =
           uid?.let { StaredRequest(uid = it) } // ganti dengan data yang sesuai
-        try {
+        try
+        {
           if (uid != null)
           {
             if (staredRequest != null)
             {
-              viewModel.saveUser(uid, staredRequest,context)
+              viewModel.saveUser(uid, staredRequest, context)
             }
           }
-        } catch (e: Exception) {
+        } catch (e: Exception)
+        {
           Log.e("Profile", "Save user failed: ${e.message}")
         }
       }
@@ -242,5 +260,4 @@ UserDetailViewModel, )
   ) {
     Text(text = "Save")
   }
-
 }

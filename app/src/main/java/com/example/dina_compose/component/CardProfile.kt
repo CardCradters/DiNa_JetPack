@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.example.dina_compose.data.ProfileRequest
 
 @Composable
-fun CardProfile(profiles:ProfileRequest){
+fun CardProfile(profiles: ProfileRequest)
+{
   Card(
     modifier = Modifier
       .padding(top = 66.dp)
@@ -59,5 +60,7 @@ fun CardProfile(profiles:ProfileRequest){
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium
       )
-}}}
+    }
+  }
+}
 

@@ -75,11 +75,11 @@ fun Barcode(onDismiss: () -> Unit)
   }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun BarcodePreview()
-{
-  DiNa_ComposeTheme(darkTheme = false) {
-    Barcode{}
-  }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun BarcodePreview()
+//{
+//  DiNa_ComposeTheme(darkTheme = false) {
+//    Barcode{}
+//  }
+//}
