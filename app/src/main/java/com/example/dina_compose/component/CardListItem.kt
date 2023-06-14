@@ -29,15 +29,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.rememberImagePainter
 import com.example.dina_compose.R
-import com.example.dina_compose.data.StaredRequest
 import com.example.dina_compose.data.UserRequest
 import com.example.dina_compose.screen.user_detail.UserDetailViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun ClickableIcon(
@@ -66,6 +63,8 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
   }
 
   val userDetail by viewModel.userDetail.collectAsState()
+
+
 
   Card(
     Modifier
@@ -136,20 +135,20 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
       ClickableIcon(
         isStared = user.stared
       ) {
-        viewModel.viewModelScope.launch {
-          val uid = user.uid
-          val staredRequest = StaredRequest(uid = uid)
-          try {
-            val response = viewModel.starred(uid, staredRequest, context)
-            // Process the response if needed
-          } catch (e: Exception) {
-            Log.e("Profile", "Starred failed: ${e.message}")
-          }
-        }
+        viewModel.starred(
+          context = context,
+          uid = user.uid,
+//          name = user.name,
+//          job_title = user.job_title,
+//          workplace = user.workplace,
+//          isStarred = !user.stared,
+//          filename = user.filename ?: "",
+//          storagePath = user.storagePath,
+        )
       }
     }
-    }
   }
+}
 fun logMessage(message: String) {
   Log.d("MyApp", message)
 }

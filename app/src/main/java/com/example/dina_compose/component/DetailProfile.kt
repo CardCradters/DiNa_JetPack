@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -31,6 +32,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,15 +41,17 @@ import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.profile.ProfileViewModel
 
 @Composable
-fun DetailProfile(times: Int, placeholderTexts:
-List<String>, viewModel:ProfileViewModel)
+fun DetailProfile(
+  times: Int, placeholderTexts:
+  List<String>, viewModel: ProfileViewModel
+)
 {
   var postSuccess by remember { mutableStateOf(false) }
   val context = LocalContext.current
   val focusManager = LocalFocusManager.current
+  val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
   var compValue by remember { mutableStateOf("") }
   var addrValue by remember { mutableStateOf("") }
-  val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
   val textFieldValues = remember { mutableStateListOf<String>() }
   val icons = listOf(
     painterResource(id = R.drawable.baseline_alternate_email_24),
@@ -66,9 +70,11 @@ List<String>, viewModel:ProfileViewModel)
       textStyle = MaterialTheme.typography.subtitle1.copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        val companyText = if (profile?.workplace.isNullOrEmpty()) {
+        val companyText = if (profile?.workplace.isNullOrEmpty())
+        {
           "Company"
-        } else {
+        } else
+        {
           profile?.workplace
         }
         companyText?.let {
@@ -82,7 +88,8 @@ List<String>, viewModel:ProfileViewModel)
       },
       keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
-        imeAction = ImeAction.Done
+        capitalization = KeyboardCapitalization.Words,
+        imeAction = ImeAction.Done,
       ),
       keyboardActions = KeyboardActions(
         onDone = {
@@ -109,9 +116,11 @@ List<String>, viewModel:ProfileViewModel)
         .copy(textAlign = TextAlign.Center),
       singleLine = true,
       placeholder = {
-        val addresText = if (profile?.addressCompany.isNullOrEmpty()) {
+        val addresText = if (profile?.addressCompany.isNullOrEmpty())
+        {
           "Address Company"
-        } else {
+        } else
+        {
           profile?.addressCompany
         }
         addresText?.let {
@@ -125,6 +134,7 @@ List<String>, viewModel:ProfileViewModel)
       },
       keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
+        capitalization = KeyboardCapitalization.Words,
         imeAction = ImeAction.Done
       ),
       keyboardActions = KeyboardActions(
@@ -185,6 +195,7 @@ List<String>, viewModel:ProfileViewModel)
         },
         keyboardOptions = KeyboardOptions(
           keyboardType = KeyboardType.Text,
+          capitalization = KeyboardCapitalization.Words,
           imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(
@@ -201,18 +212,18 @@ List<String>, viewModel:ProfileViewModel)
         )
       )
     }
-      Divider(
-        modifier = Modifier.fillMaxWidth(),
-        color = Color.Black,
-        thickness = 0.5.dp
-      )
-    }
     Divider(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(72.dp),
-      color = Color.Transparent
+      modifier = Modifier.fillMaxWidth(),
+      color = Color.Black,
+      thickness = 0.5.dp
     )
+  }
+  Divider(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(24.dp),
+    color = Color.Transparent
+  )
   Button(
     onClick = {
       val job_title = ""
@@ -226,7 +237,7 @@ List<String>, viewModel:ProfileViewModel)
 
       viewModel.postProfile(
         context,
-        job_title  = job_title,
+        job_title = job_title,
         workplace = workplace,
         addressCompany = addressCompany,
         emailCompany = emailCompany,
@@ -235,9 +246,11 @@ List<String>, viewModel:ProfileViewModel)
         phoneMobileCompany = phoneMobileCompany,
         workplaceUri = workplaceUri,
       ) { success, message ->
-        if (success) {
-          postSuccess=success
-        } else {
+        if (success)
+        {
+          postSuccess = success
+        } else
+        {
           Log.e("Profile", "Post profile failed: $message")
         }
       }
