@@ -14,94 +14,148 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.example.dina_compose.component.BottomBar
+import com.example.dina_compose.component.BottomSheet
+import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.data.ProfileRequest
+import com.example.dina_compose.screen.home.HomeViewModel
+import com.example.dina_compose.screen.profile.ProfileViewModel
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Scan(navController: NavController) {
+fun Scan(navController: NavHostController,
+         viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
   var barcodeText by remember { mutableStateOf("") }
   var imageUri by remember { mutableStateOf<Uri?>(null) }
-
+  val scaffoldState = rememberScaffoldState()
+  val sheetState = rememberBottomSheetScaffoldState()
+  val coroutineScope = rememberCoroutineScope()
+  val contextForToast = LocalContext.current
   val context = LocalContext.current
+  val profiles: ProfileRequest? by viewModel.profile.collectAsState()
 
-  val scanBarcode: () -> Unit = {
-    imageUri?.let { uri ->
-      val image = InputImage.fromFilePath(context, uri)
-      val options = BarcodeScannerOptions.Builder()
-        .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
-        .build()
 
-      val scanner: BarcodeScanner = BarcodeScanning.getClient(options)
 
-      scanner.process(image)
-        .addOnSuccessListener { barcodes ->
-          for (barcode in barcodes) {
-            val rawValue = barcode.rawValue
-            barcodeText = rawValue ?: ""
-          }
-        }
-        .addOnFailureListener {
-          barcodeText = "Failed to scan barcode."
-        }
-    }
+  var openDialog by remember { mutableStateOf(false) }
+
+  LaunchedEffect(Unit) {
+    viewModel.fetchProfile(context)
   }
 
   val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
     if (uri != null) {
       imageUri = uri
+
     }
   }
 
   val imagePainter = rememberImagePainter(data = imageUri)
 
-  Column(
-    modifier = Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Row() {
-      Button(
-        onClick = {
-          galleryLauncher.launch("image/*")
-        },
-        colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
-        modifier = Modifier.padding(16.dp)
-      ) {
-        Text(text = "Select Image")
-      }
 
-      Spacer(modifier = Modifier.width(10.dp))
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
+      TopAppBar {
 
-      Button(
-        onClick = {
-          navController.navigate("camera_preview")
-        },
-        colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
-        modifier = Modifier.padding(16.dp)
-      ) {
-        Text(text = "Scan with Camera")
+        coroutineScope.launch {
+          if (sheetState.bottomSheetState.isCollapsed)
+          {
+            sheetState.bottomSheetState.expand()
+          } else
+          {
+            sheetState.bottomSheetState.collapse()
+          }
+        }
       }
-    }
+    },
+    bottomBar = {
+      BottomBar(
+        contextForToast = contextForToast, navController = navController,
+        onShareClicked = { openDialog = true }, viewModel = ProfileViewModel
+          (savedStateHandle = SavedStateHandle())
+      )
+    },
+  ){ innerPadding ->
+    BottomSheetScaffold(
+      scaffoldState = sheetState,
+      sheetBackgroundColor = MaterialTheme.colors.primary,
+      sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+      sheetContent = {
+        BottomSheet(
+          coroutineScope = coroutineScope,
+          scaffoldState = sheetState,
+          contextForToast = contextForToast,viewModel = HomeViewModel(), navController=
+          navController
+        )
+      },
+      content = {
+        Column(
+          modifier = Modifier
+            .padding(innerPadding)
+            .padding(horizontal = 24.dp),
+          verticalArrangement = Arrangement.Center,
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+          ) {
+            Row() {
+              Button(
+                onClick = {
+                  galleryLauncher.launch("image/*")
+                },
+                colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
+                modifier = Modifier.padding(16.dp)
+              ) {
+                Text(text = "Select Image")
+              }
+
+              Spacer(modifier = Modifier.width(10.dp))
+
+              Button(
+                onClick = {
+                  navController.navigate("camera_preview")
+                },
+                colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
+                modifier = Modifier.padding(16.dp)
+              ) {
+                Text(text = "Scan with Camera")
+              }
+            }
 
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -118,31 +172,48 @@ fun Scan(navController: NavController) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    Button(
-      onClick = {
-        scanBarcode()
-      },
-      colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
-      modifier = Modifier.padding(16.dp)
-    ) {
-      Text(text = "Scan")
-    }
+            Button(
+              onClick = {
+                profiles?.let { profile ->
+                  imageUri?.let { uri ->
+                    val image = InputImage.fromFilePath(context, uri)
+                    val options = BarcodeScannerOptions.Builder()
+                      .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+                      .build()
 
-    Spacer(modifier = Modifier.height(16.dp))
+                    val scanner: BarcodeScanner = BarcodeScanning.getClient(options)
 
-    Text(
-      text = barcodeText,
-      fontSize = 20.sp,
-      modifier = Modifier.padding(16.dp)
-    )
-  }
-}
+                    scanner.process(image)
+                      .addOnSuccessListener { barcodes ->
+                        for (barcode in barcodes) {
+                          val rawValue = barcode.rawValue
+                          if (!rawValue.isNullOrBlank()) {
+                            val uid = rawValue.substringBefore("/")
+                            val name = rawValue.substringAfter("/")
+                            val destination = "detail_screen/$uid/$name"
+                            navController.navigate(destination) {
+                              popUpTo("scan_screen") {
+                                inclusive = true
+                              }
+                            }
+                            return@addOnSuccessListener
+                          }
+                        }
+                        barcodeText = "No barcode found."
+                      }
+                      .addOnFailureListener {
+                        barcodeText = "Failed to scan barcode."
+                      }
+                  }
+                }
+              },
+              modifier = Modifier.padding(16.dp)
+            ) {
+              Text(text = "Scan")
+            }
 
 
+          }
+}})}}
 
-@Preview(showSystemUi = true)
-@Composable
-fun View(){
-  val context = LocalContext.current
-  Scan(navController = NavController(context))
-}
+

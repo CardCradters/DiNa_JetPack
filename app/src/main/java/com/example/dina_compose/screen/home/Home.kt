@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import com.example.dina_compose.R
 import com.example.dina_compose.component.BottomBar
@@ -87,7 +88,8 @@ fun Home(
       }
     },
     bottomBar = {
-      BottomBar(navController = navController,contextForToast = context, onShareClicked = { openDialog = true })
+      BottomBar(navController = navController,contextForToast = context,
+        onShareClicked = { openDialog = true }, viewModel = ProfileViewModel(savedStateHandle = SavedStateHandle()))
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -120,7 +122,7 @@ fun Home(
               queryState = query
               viewModel.performSearch(context, query) // Call performSearch in the view model
             })
-            namecardHome(viewModel = ProfileViewModel())
+            namecardHome(viewModel = ProfileViewModel(savedStateHandle = SavedStateHandle()))
             Text(
               "Digitize Your Network",
               fontSize = 24.sp,

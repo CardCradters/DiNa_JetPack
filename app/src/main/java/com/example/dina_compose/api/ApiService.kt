@@ -69,7 +69,7 @@ interface ApiService
   @POST("v1/cardstorage/star/{id}")
   suspend fun starred(
     @Path("id") id: String,
-    @Body staredRequest: StaredRequest
+    @Body request: StaredRequest
   ): Response<UserResponse>
 }
 

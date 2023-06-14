@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -53,7 +57,7 @@ fun Login(
   var emailValue by remember { mutableStateOf("") }
   var passwordValue by remember { mutableStateOf("") }
   val context = LocalContext.current
-
+  var passwordVisible by remember { mutableStateOf(false) }
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -82,8 +86,6 @@ fun Login(
         .padding(top = 11.5.dp)
         .fillMaxWidth()
         .aspectRatio(4f / 3f)
-//        .size(350.dp)
-//                .align(Alignment.CenterHorizontally)
     )
 
     TextField(
@@ -128,7 +130,22 @@ fun Login(
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
-      )
+      ),
+      trailingIcon = {
+        val visibilityIcon = if (passwordVisible) {
+          Icons.Filled.VisibilityOff
+        } else {
+          Icons.Filled.Visibility
+        }
+        IconButton(
+          onClick = { passwordVisible = !passwordVisible }
+        ) {
+          Icon(
+            imageVector = visibilityIcon,
+            contentDescription = null
+          )
+        }
+      }
     )
     Spacer(Modifier.height(24.dp))
     Button(
@@ -142,7 +159,7 @@ fun Login(
             navController.navigate("home_screen")
           } else
           {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
           }
         }
       },

@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.dina_compose.data.RecognitionResponse
 import com.example.dina_compose.screen.auth.Login
 import com.example.dina_compose.screen.auth.Register
+import com.example.dina_compose.screen.auth.Register2
 import com.example.dina_compose.screen.bottomsheet.About
 import com.example.dina_compose.screen.home.Home
 import com.example.dina_compose.screen.profile.Profile
@@ -26,6 +28,9 @@ fun AppNavigation()
     }
     composable("register_screen") {
       Register(navController = navController)
+    }
+    composable("register2_screen") {
+      Register2(navController = navController, respons = RecognitionResponse("","",""))
     }
     composable("home_screen") {
       Home(navController = navController)

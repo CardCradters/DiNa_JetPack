@@ -17,15 +17,17 @@ import kotlinx.coroutines.launch
 
 class UserDetailViewModel : ViewModel()
 {
-
   private val _stared = MutableStateFlow<List<UserRequest>>(emptyList())
-  val stared : StateFlow<List<UserRequest>>  = _stared
+  val stared: StateFlow<List<UserRequest>> = _stared
   private val _userDetail = MutableStateFlow<ProfileRequest?>(null)
   val userDetail: StateFlow<ProfileRequest?> = _userDetail
 
 
+
+
   fun fetchUserDetail(context: Context, query: String) = viewModelScope.launch {
-    when (val result = safeApiCall { ApiConfig.apiService(context).getUserDetail(query) })
+    when (val result =
+      safeApiCall { ApiConfig.apiService(context).getUserDetail(query) })
     {
       DataState.Loading -> Unit
       is DataState.Error -> Log.e("salah", result.message)
@@ -40,37 +42,21 @@ class UserDetailViewModel : ViewModel()
     id: String,
     request: StaredRequest,
     context: Context
-  ): DataState<UserResponse> {
+  ): DataState<UserResponse>
+  {
     return safeApiCall {
       ApiConfig.apiService(context).saveUser(id, request)
     }
   }
 
-  fun starred(context: Context,
-              uid: String,
-//              name: String,
-//              job_title: String,
-//              workplace: String,
-//              isStarred: Boolean,
-//              filename: String,
-//              storagePath: String,
-              callback: (Boolean, String) -> Unit = { _, _ -> }
-  ) = viewModelScope.launch {
-
-    val staredRequest = StaredRequest(
-      uid = uid,
-//      name = name,
-//      job_title = job_title,
-//      workplace = workplace,
-//      stared = isStarred,
-//      filename = filename,
-//      storagePath = storagePath,
-    )
-
-    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid, staredRequest) }) {
-      is DataState.Error -> callback(false, result.message ?: "Unknown error")
-      DataState.Loading -> Unit
-      is DataState.Result -> callback(true, "Successfully starred")
+  suspend fun starred(
+    id: String,
+    request: StaredRequest,
+    context: Context
+  ): DataState<UserResponse>
+  {
+    return safeApiCall {
+      ApiConfig.apiService(context).starred(id, request)
     }
   }
 }

@@ -3,8 +3,10 @@ package com.example.dina_compose.screen.profile
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dina_compose.api.ApiConfig
@@ -14,6 +16,10 @@ import com.example.dina_compose.data.PostProfileRequest
 import com.example.dina_compose.data.PostProfileResponse
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.data.UploadRequest
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.qrcode.QRCodeWriter
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,9 +30,12 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import java.net.URL
+import java.util.Hashtable
 
-class ProfileViewModel : ViewModel()
+class ProfileViewModel (private val savedStateHandle: SavedStateHandle) :
+  ViewModel()
 {
+
   private val _profile = MutableStateFlow<ProfileRequest?>(null)
   val profile: StateFlow<ProfileRequest?> = _profile
   private val _updateProfileResult = MutableLiveData<PostProfileResponse?>()
@@ -34,6 +43,53 @@ class ProfileViewModel : ViewModel()
   private val _profilePicture = MutableStateFlow<Bitmap?>(null)
   val profilePicture: StateFlow<Bitmap?> = _profilePicture
 
+
+  var qrCode = buildString {
+    append(profile.value?.uid)
+  }
+    set(value) {
+      savedStateHandle.set("QR CODE", value)
+      field = value
+    }
+
+  init {
+    savedStateHandle.get<String>("QR CODE")?.run {
+      qrCode = this
+    }
+  }
+
+  fun generateQRCodeBitmap(data: String): Bitmap? {
+    if (data.isBlank()) {
+      return null
+    }
+
+    val width = 400
+    val height = 400
+
+    val hints = Hashtable<EncodeHintType, Any>()
+    hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
+
+    try {
+      val qrCodeWriter = QRCodeWriter()
+      val bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, width, height, hints)
+
+      val pixels = IntArray(width * height)
+      for (y in 0 until height) {
+        val offset = y * width
+        for (x in 0 until width) {
+          pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
+        }
+      }
+
+      return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+        setPixels(pixels, 0, width, 0, 0, width, height)
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+
+    return null
+  }
 
 
   fun loadProfilePicture(context: Context, file: File, uploadRequest: UploadRequest) {
@@ -56,11 +112,6 @@ class ProfileViewModel : ViewModel()
             bitmap?.let {
               val imageUrl = "https://example.com/images/${uploadRequest.filename}"
               _profilePicture.value = bitmap
-              // Menggunakan bitmap untuk keperluan lain
-              // misalnya menampilkan gambar di UI
-              // atau mengunggah ke penyimpanan lokal
-              // atau operasi lain yang memerlukan bitmap
-
 
             }
           } else {

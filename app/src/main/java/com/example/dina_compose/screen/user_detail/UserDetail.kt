@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.example.dina_compose.R
@@ -56,6 +57,7 @@ import com.example.dina_compose.component.DetailUser
 import com.example.dina_compose.component.TopAppBar
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.home.HomeViewModel
+import com.example.dina_compose.screen.profile.ProfileViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -103,7 +105,9 @@ fun UserDetail(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast, navController = navController, onShareClicked = { openDialog = true })
+      BottomBar(contextForToast = contextForToast, navController = navController,
+        onShareClicked = { openDialog = true }, viewModel = ProfileViewModel(savedStateHandle = SavedStateHandle())
+      )
     },
   ) { innerPadding ->
     BottomSheetScaffold(

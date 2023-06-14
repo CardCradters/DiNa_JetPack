@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,6 +41,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -85,18 +90,8 @@ fun Register(
         .padding(top = 8.dp)
         .align(Alignment.Start)
     )
-//    Image(
-//      painter = painterResource(id = R.drawable.baseline_account_circle_24),
-//      contentDescription = "Profile Picture",
-//      modifier = Modifier
-//        .padding(vertical = 16.dp)
-//        .size(120.dp)
-//        .clip(shape = CircleShape)
-//        .border(width = 2.dp, color = Color.White, shape = CircleShape)
-//        .shadow(elevation = 5.dp)
-//        .background(color = Color.Gray)
-////          .align(Alignment.CenterHorizontally)
-//    )
+
+    Spacer(Modifier.height(24.dp))
 
     TextField(
       value = nameValue,
@@ -149,6 +144,7 @@ fun Register(
       )
     )
 
+    var passwordVisible by remember { mutableStateOf(false) }
     TextField(
       value = passwordValue,
       onValueChange = { passwordValue = it },
@@ -158,14 +154,33 @@ fun Register(
         .padding(top = 16.dp),
       label = { Text(text = stringResource(R.string.enter_password)) },
       singleLine = true,
-      visualTransformation = PasswordVisualTransformation(),
+      visualTransformation = if (passwordVisible) {
+        VisualTransformation.None
+      } else {
+        PasswordVisualTransformation()
+      },
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
       colors = TextFieldDefaults.textFieldColors(
         textColor = Color.Gray,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
-      )
+      ),
+      trailingIcon = {
+        val visibilityIcon = if (passwordVisible) {
+          Icons.Filled.VisibilityOff
+        } else {
+          Icons.Filled.Visibility
+        }
+        IconButton(
+          onClick = { passwordVisible = !passwordVisible }
+        ) {
+          Icon(
+            imageVector = visibilityIcon,
+            contentDescription = null
+          )
+        }
+      }
     )
     Spacer(Modifier.height(24.dp))
     Button(
@@ -183,7 +198,7 @@ fun Register(
             navController.navigate("login_screen")
           } else
           {
-            Toast.makeText(context, message, Toast.LENGTH_LONG)
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
           }
         }
       },
@@ -254,6 +269,26 @@ fun Register(
         style = MaterialTheme.typography.labelMedium,
         onClick = {
           navController.navigate("login_screen")
+        }
+      )
+    }
+    Spacer(Modifier.height(4.dp))
+    Row(
+      modifier = Modifier
+        .align(Alignment.CenterHorizontally),
+//          .padding(top = 16.dp),
+    ) {
+      Text(
+        text = stringResource(R.string.have_namecard),
+        style = MaterialTheme.typography.bodySmall,
+        color = Color.Black
+      )
+      Spacer(Modifier.width(4.dp))
+      ClickableText(
+        text = AnnotatedString(stringResource(R.string.open_scanner)),
+        style = MaterialTheme.typography.labelMedium,
+        onClick = {
+          navController.navigate("register2_screen")
         }
       )
     }

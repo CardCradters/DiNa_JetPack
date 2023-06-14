@@ -34,6 +34,9 @@ class RegisterViewModel() : ViewModel() {
       is DataState.Result -> callback(true, "Berhasil")
     }
   }
+
+
+
 }
 
 

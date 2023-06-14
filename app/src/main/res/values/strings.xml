@@ -33,4 +33,6 @@
     <string name="welcome">Welcome back!</string>
     <string name="have_account">Do you already have account?</string>
     <string name="placeholder_search">Search</string>
+    <string name="open_scanner">Scan here</string>
+    <string name="have_namecard">Do you have Namecard?\n</string>
 </resources>

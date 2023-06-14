@@ -38,22 +38,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import com.example.dina_compose.R
 import com.example.dina_compose.component.BottomBar
 import com.example.dina_compose.component.BottomSheet
+import com.example.dina_compose.component.CardListItem
 import com.example.dina_compose.component.Categories
 import com.example.dina_compose.component.NamecardView
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
-import com.example.dina_compose.component.categoryListItem
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.home.HomeViewModel
 import com.example.dina_compose.screen.profile.ProfileViewModel
+import com.example.dina_compose.screen.user_detail.UserDetailViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -74,7 +75,6 @@ fun Storage(
   val searchCard by viewModel.searchCard.collectAsState(emptyList())
   var queryState by remember { mutableStateOf("") }
   var selectedIndex by remember { mutableIntStateOf(0) }
-
   var openDialog by remember { mutableStateOf(false) }
 
   LaunchedEffect(Unit) {
@@ -97,7 +97,11 @@ fun Storage(
       }
     },
     bottomBar = {
-      BottomBar(navController = navController, contextForToast = context, onShareClicked = { openDialog = true })
+      BottomBar(navController = navController,
+        contextForToast = context,
+        onShareClicked = { openDialog = true },
+        viewModel = ProfileViewModel(savedStateHandle = SavedStateHandle())
+      )
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -129,7 +133,7 @@ fun Storage(
               queryState = query
               viewModel.performSearch(context, query)
             })
-            NamecardView(viewModel = ProfileViewModel())
+            NamecardView(viewModel = ProfileViewModel(savedStateHandle = SavedStateHandle()))
 
             Categories(
               times = 3,
@@ -168,62 +172,25 @@ fun Storage(
                 Spacer(Modifier.height(16.dp))
 
                 LazyColumn(
-                  modifier = Modifier
-                    .fillMaxSize(),
+                  modifier = Modifier.fillMaxSize(),
                   verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                   state = scrollState
                 ) {
-                  if (allCard.isEmpty() && queryState.isEmpty())
+                  val itemsToDisplay = if (queryState.isEmpty())
                   {
-                    item {
-                      Text(
-                        text = "Anda belum pernah menyimpan 1 pun kontak",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                      )
+                    when (selectedIndex)
+                    {
+                      0 -> allCard
+                      1 -> starCard
+                      2 -> companyCard
+                      else -> emptyList()
                     }
                   } else
                   {
-                    if (starCard.isEmpty() && queryState.isEmpty())
-                    {
-                      item {
-                        Text(
-                          text = "Anda belum pernah menyimpan 1 pun kontak",
-                          modifier = Modifier.fillMaxWidth(),
-                          textAlign = TextAlign.Center
-                        )
-                      }
-                    } else
-                    {
-                      if (companyCard.isEmpty() && queryState.isEmpty())
-                      {
-                        item {
-                          Text(
-                            text = "Anda belum pernah menyimpan 1 pun kontak",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                          )
-                        }
-                      } else
-                      {
-                        val itemsToDisplay = if (queryState.isEmpty())
-                        {
-                          when (selectedIndex)
-                          {
-                            0 -> allCard
-                            1 -> starCard
-                            2 -> companyCard
-                            else -> emptyList()
-                          }
-                        } else
-                        {
-                          searchCard
-                        }
-                        items(itemsToDisplay) { user ->
-                          categoryListItem(user, context, viewModel, navController)
-                        }
-                      }
-                    }
+                    searchCard
+                  }
+                  items(itemsToDisplay) { user ->
+                    CardListItem(user,context, viewModel= UserDetailViewModel(), navController)
                   }
                 }
               }
@@ -234,9 +201,6 @@ fun Storage(
     )
   }
 }
-
-
-
 
 @Composable
 fun namecardStor(viewModel: ProfileViewModel)
@@ -259,9 +223,11 @@ fun namecardStor(viewModel: ProfileViewModel)
       modifier = Modifier.fillMaxSize(),
       contentScale = ContentScale.Crop,
     )
-    val Company = if (profile?.workplace.isNullOrEmpty()) {
+    val Company = if (profile?.workplace.isNullOrEmpty())
+    {
       "Company"
-    } else {
+    } else
+    {
       profile?.workplace
     }
     Company?.let {
@@ -279,9 +245,11 @@ fun namecardStor(viewModel: ProfileViewModel)
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
-        val name = if (profile?.name.isNullOrEmpty()) {
+        val name = if (profile?.name.isNullOrEmpty())
+        {
           "Username"
-        } else {
+        } else
+        {
           profile?.name
         }
         name?.let {
@@ -291,9 +259,11 @@ fun namecardStor(viewModel: ProfileViewModel)
             color = Color.White,
             textDecoration = TextDecoration.Underline,
           )
-          val job = if (profile?.job_title.isNullOrEmpty()) {
+          val job = if (profile?.job_title.isNullOrEmpty())
+          {
             "Job Title"
-          } else {
+          } else
+          {
             profile?.job_title
           }
           job?.let {
@@ -302,10 +272,11 @@ fun namecardStor(viewModel: ProfileViewModel)
               style = MaterialTheme.typography.subtitle2,
               color = Color.White
             )
-
           }
         }
-      }}}
+      }
+    }
+  }
 }
 
 

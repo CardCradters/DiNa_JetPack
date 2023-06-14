@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import com.example.dina_compose.component.BottomBar
 import com.example.dina_compose.component.BottomSheet
@@ -52,6 +53,7 @@ fun Profile(
   viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 )
 {
+
   val scaffoldState = rememberScaffoldState()
   val sheetState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
@@ -66,8 +68,8 @@ fun Profile(
     "Website"
   )
 
+//  val qrCodeBitmap: Bitmap? = viewModel.generateQRCodeBitmap(data)
   var openDialog by remember { mutableStateOf(false) }
-
   LaunchedEffect(Unit) {
     viewModel.fetchProfile(contextForToast)
 
@@ -91,7 +93,9 @@ fun Profile(
       }
     },
     bottomBar = {
-      BottomBar(contextForToast = contextForToast, navController = navController, onShareClicked = { openDialog = true })
+      BottomBar(contextForToast = contextForToast, navController = navController,
+        onShareClicked = { openDialog = true }, viewModel = ProfileViewModel
+          (savedStateHandle = SavedStateHandle()))
     },
   ) { innerPadding ->
     BottomSheetScaffold(
@@ -125,6 +129,16 @@ fun Profile(
               NamecardView(viewModel = viewModel)
               ProfilePicture(viewModel = viewModel, uploadRequest = UploadRequest(""))
             }
+
+//            qrCodeBitmap?.let { bitmap ->
+//              Image(
+//                bitmap = bitmap.asImageBitmap(),
+//                contentDescription = null,
+//                modifier = Modifier
+//                  .size(400.dp)
+//                  .padding(top = 16.dp)
+//              )
+//            }
 
             Card(
               modifier = Modifier
@@ -184,10 +198,10 @@ fun Profile(
                         DetailProfile(times = 5, placeholderTexts = placeholders as List<String>,
                           viewModel = viewModel)
                       }
+
                     }
                   }
                 }
-
               }
             }
           }
