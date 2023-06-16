@@ -2,6 +2,7 @@ package com.example.dina_compose.screen.share
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.AlertDialog
@@ -11,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -27,8 +30,12 @@ fun BarcodeView(
 ) {
   val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
   val contextForToast = LocalContext.current
+   val loadingState = remember { mutableStateOf(false) }
+
   LaunchedEffect(Unit) {
+    loadingState.value = true
     viewModel.fetchProfile(contextForToast)
+    loadingState.value = false
   }
 
   val qrCode = buildString {
@@ -44,7 +51,7 @@ fun BarcodeView(
   if (profile != null) {
     AlertDialog(
       onDismissRequest = { onDismiss() },
-      title = { Text("Barcode") },
+      title = { Text("SCAN ME") },
       text = {
         barcodeBitmap?.let { bitmap ->
           Image(
@@ -52,6 +59,7 @@ fun BarcodeView(
             contentDescription = null,
             modifier = Modifier
               .size(400.dp)
+              .background(Color(0xFF83B9E2))
               .padding(top = 16.dp)
           )
         } ?: run {
@@ -60,7 +68,9 @@ fun BarcodeView(
       },
       confirmButton = {
         Button(
-          onClick = { onDismiss() }
+          onClick = { onDismiss() },
+          modifier = Modifier
+            .background(Color.White)
         ) {
           Text("Close")
         }
@@ -68,15 +78,3 @@ fun BarcodeView(
     )
   }
   }
-
-
-
-//
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun BarcodePreview()
-//{
-//  DiNa_ComposeTheme(darkTheme = false) {
-//    Barcode{}
-//  }
-//}

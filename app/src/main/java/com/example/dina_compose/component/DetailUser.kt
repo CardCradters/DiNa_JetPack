@@ -2,10 +2,13 @@ package com.example.dina_compose.component
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -80,22 +83,6 @@ fun DetailUser(
           textAlign = TextAlign.Center,
           style = MaterialTheme.typography.body1
         )
-
-//        val companyText = if (userDetail?.workplace.isNullOrEmpty())
-//        {
-//          "Company"
-//        } else
-//        {
-//          userDetail?.workplace
-//        }
-//        companyText?.let {
-//          Text(
-//            text = it,
-//            modifier = Modifier.fillMaxWidth(),
-//            textAlign = TextAlign.Center,
-//            style = MaterialTheme.typography.body1
-//          )
-//        }
       },
       keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
@@ -235,29 +222,59 @@ fun DetailUser(
       color = Color.Transparent
     )
   }
-  Button(
-    onClick = {
-      viewModel.viewModelScope.launch {
-        val uid = userDetail?.uid
-        val staredRequest =
-          uid?.let { StaredRequest(uid = it) } // ganti dengan data yang sesuai
-        try
-        {
-          if (uid != null)
+  Row() {
+    Button(
+      onClick = {
+        viewModel.viewModelScope.launch {
+          val uid = userDetail?.uid
+          val staredRequest =
+            uid?.let { StaredRequest(uid = it) } // ganti dengan data yang sesuai
+          try
           {
-            if (staredRequest != null)
+            if (uid != null)
             {
-              viewModel.saveUser(uid, staredRequest, context)
+              if (staredRequest != null)
+              {
+                viewModel.saveUser(uid, staredRequest, context)
+              }
             }
+          } catch (e: Exception)
+          {
+            Log.e("Profile", "Save user failed: ${e.message}")
           }
-        } catch (e: Exception)
-        {
-          Log.e("Profile", "Save user failed: ${e.message}")
         }
-      }
-    },
-    modifier = Modifier.padding(top = 16.dp)
-  ) {
-    Text(text = "Save")
+      },
+      modifier = Modifier.padding(top = 16.dp)
+    ) {
+      Text(text = "Save")
+    }
+    Spacer(modifier = Modifier.width(5.dp))
+
+    Button(
+      onClick = {
+        viewModel.viewModelScope.launch {
+          val uid = userDetail?.uid
+          val staredRequest =
+            uid?.let { StaredRequest(uid = it) } // ganti dengan data yang sesuai
+          try
+          {
+            if (uid != null)
+            {
+              if (staredRequest != null)
+              {
+                viewModel.deleteUser(uid, context)
+              }
+            }
+          } catch (e: Exception)
+          {
+            Log.e("Profile", "Save user failed: ${e.message}")
+          }
+        }
+      },
+      modifier = Modifier.padding(top = 16.dp)
+    ) {
+      Text(text = "Delete")
+    }
   }
+
 }

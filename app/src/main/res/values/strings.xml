@@ -35,4 +35,7 @@
     <string name="placeholder_search">Search</string>
     <string name="open_scanner">Scan here</string>
     <string name="have_namecard">Do you have Namecard?\n</string>
+    <string name="manual">Manual Register</string>
+    <string name="account_register_already">Your email or phone number is already being used by another account</string>
+    <string name="server_failed">Failed to connect with the server, try again later</string>
 </resources>

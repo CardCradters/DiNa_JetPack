@@ -30,7 +30,7 @@ data class UserRequest(
   @SerializedName("phoneTelpCompany")
   val phoneTelpCompany: String,
   @SerializedName("stared")
-  val stared: Boolean,
+  var stared: Boolean,
   @SerializedName("filename")
   val filename: String,
   @SerializedName("storagePath")

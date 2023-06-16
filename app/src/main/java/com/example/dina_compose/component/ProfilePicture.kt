@@ -26,10 +26,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.dina_compose.R
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.data.UploadRequest
 import com.example.dina_compose.screen.profile.ProfileViewModel
@@ -53,7 +54,6 @@ fun ProfilePicture(viewModel: ProfileViewModel, uploadRequest: UploadRequest ) {
     }
   }
 
-
   val imageUrl = uploadRequest.filename
   val profilePictureBitmap by viewModel.profilePicture.collectAsState()
 
@@ -62,7 +62,6 @@ fun ProfilePicture(viewModel: ProfileViewModel, uploadRequest: UploadRequest ) {
       Glide.with(context)
         .load(imageUrl)
         .apply(RequestOptions.circleCropTransform())
-//        .into(_profilePicture)
     }
   }
 
@@ -72,7 +71,7 @@ fun ProfilePicture(viewModel: ProfileViewModel, uploadRequest: UploadRequest ) {
     contentAlignment = Alignment.BottomEnd,
   ) {
     Image(
-      painter = rememberImagePainter(data = imageUrl),
+      painter =  painterResource(id = R.drawable.baseline_account_circle_24),
       contentDescription = "Profile Picture",
       modifier = Modifier
         .size(140.dp)
@@ -100,13 +99,3 @@ fun ProfilePicture(viewModel: ProfileViewModel, uploadRequest: UploadRequest ) {
     }
   }
 }
-//private fun convertUrlToBitmap(url: String): Bitmap? {
-//  return try {
-//    val inputStream = URL(url).openStream()
-//    BitmapFactory.decodeStream(inputStream)
-//  } catch (e: Exception) {
-//    Log.e("Error", "Failed to convert URL to bitmap: ${e.message}")
-//    null
-//  }
-//}
-

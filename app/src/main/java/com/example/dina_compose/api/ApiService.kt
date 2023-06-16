@@ -3,14 +3,16 @@ package com.example.dina_compose.api
 import com.example.dina_compose.data.PostProfileRequest
 import com.example.dina_compose.data.PostProfileResponse
 import com.example.dina_compose.data.ProfileResponse
-import com.example.dina_compose.data.RegisRequest
-import com.example.dina_compose.data.RegisResponse
+import com.example.dina_compose.data.RegRequest
+import com.example.dina_compose.data.RegisterResponse
 import com.example.dina_compose.data.StaredRequest
 import com.example.dina_compose.data.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -43,6 +45,11 @@ interface ApiService
   @GET("v1/user-detail/{id}")
   suspend fun getUserDetail(@Path("id") id: String): Response<ProfileResponse>
 
+  @DELETE("v1/cardstorage/{id}")
+  suspend fun deleteUser(
+    @Path("id") id: String
+  ): Response<UserResponse>
+
   @POST("v1/user-detail/{id}")
   suspend fun saveUser(
     @Path("id") id: String,
@@ -62,14 +69,20 @@ interface ApiService
   ): Response<Any>
 
   @POST("v1/auth/signup")
-  suspend fun registerUser(
-    @Body registerRequest: RegisRequest
-  ): Response<RegisResponse>
+  fun regisUser(
+    @Body registerRequest: RegRequest
+  ): Call<RegisterResponse>
+
 
   @POST("v1/cardstorage/star/{id}")
   suspend fun starred(
     @Path("id") id: String,
     @Body request: StaredRequest
+  ): Response<UserResponse>
+
+  @POST("v1/cardstorage/star/delete/{id}")
+  suspend fun deleteStar(
+    @Path("id") id: String
   ): Response<UserResponse>
 }
 

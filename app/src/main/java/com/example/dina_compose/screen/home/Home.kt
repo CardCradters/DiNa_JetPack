@@ -1,22 +1,30 @@
 package com.example.dina_compose.screen.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -32,6 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -42,16 +51,16 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.dina_compose.R
 import com.example.dina_compose.component.BottomBar
 import com.example.dina_compose.component.BottomSheet
-import com.example.dina_compose.component.CardListItem
 import com.example.dina_compose.component.SearchBar
 import com.example.dina_compose.component.TopAppBar
+import com.example.dina_compose.component.logMessage
 import com.example.dina_compose.data.ProfileRequest
 import com.example.dina_compose.screen.profile.ProfileViewModel
-import com.example.dina_compose.screen.user_detail.UserDetailViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -69,9 +78,14 @@ fun Home(
   val searchResult by viewModel.searchResult.collectAsState(emptyList())
   var queryState by remember { mutableStateOf("") }
   var openDialog by remember { mutableStateOf(false) }
+  val loadingState = remember { mutableStateOf(false) }
+
   LaunchedEffect(Unit) {
+    loadingState.value = true
     viewModel.fetchUsers(context)
+    loadingState.value = false
   }
+
 
   Scaffold(
     scaffoldState = scaffoldState,
@@ -144,6 +158,12 @@ fun Home(
 
                 Spacer(Modifier.height(16.dp))
 
+                if (loadingState.value) {
+                  LinearProgressIndicator(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF83B9E2)))
+                }
+
                 LazyColumn(
                   modifier = Modifier
                     .fillMaxSize(),
@@ -161,7 +181,74 @@ fun Home(
                   } else {
                     val itemsToDisplay = if (queryState.isEmpty()) users else searchResult
                     items(itemsToDisplay) { user ->
-                      CardListItem(user,context, viewModel= UserDetailViewModel(), navController)
+                      Card(
+                        Modifier
+                          .clickable {
+                            navController.navigate("detail_screen/${user.uid}/${user.name}") {
+                              launchSingleTop = true
+                              popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                              }
+                            } ?: logMessage("User detail not available")
+                          }
+                          .wrapContentHeight()
+                          .fillMaxWidth(),
+                        elevation = 3.dp,
+                        shape = RoundedCornerShape(8.dp)
+                      ) {
+                        Row(
+                          Modifier
+                            .wrapContentHeight()
+                            .padding(horizontal = 16.dp)
+                            .padding(vertical = 16.dp),
+                          verticalAlignment = Alignment.CenterVertically,
+                          horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                          Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                          ) {
+                            Image(
+                              painter = painterResource(id = R.drawable
+                                .baseline_account_circle_24),
+                              contentDescription = "Profile Picture",
+                              modifier = Modifier
+                                .clip(shape = CircleShape)
+                                .size(60.dp)
+                                .background(color = MaterialTheme.colors.primary)
+                                .border(
+                                  width = 2.dp,
+                                  color = MaterialTheme.colors.secondary,
+                                  shape = CircleShape
+                                )
+                            )
+
+                            Column(
+                              Modifier
+                                .padding(start = 8.dp),
+                              verticalArrangement = Arrangement.Center
+                            ) {
+                              Text(
+                                user.name,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 1.sp,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                              )
+                              Text(
+                                user.job_title,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal
+                              )
+                              Text(
+                                user.workplace,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal
+                              )
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }

@@ -1,23 +1,19 @@
 package com.example.dina_compose.api
 
+
 import android.content.Context
-import android.util.Log
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
 import com.example.dina_compose.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.tasks.await
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -39,6 +35,25 @@ object ApiConfig {
       }
     }
   }
+
+  private val registerBuilder: Retrofit = Retrofit.Builder()
+    .baseUrl(BuildConfig.BASE_URL)
+    .addConverterFactory(GsonConverterFactory.create())
+    .client(createOkHttpClient())
+    .build()
+
+  val registerApiService: ApiService = registerBuilder.create(ApiService::class.java)
+
+  private fun createOkHttpClient(): OkHttpClient {
+    val loggingInterceptor = HttpLoggingInterceptor().apply {
+      level = HttpLoggingInterceptor.Level.BODY
+    }
+    return OkHttpClient.Builder()
+      .addInterceptor(loggingInterceptor)
+      .build()
+  }
+
+
   fun apiService(context: Context): ApiService {
 
     // Create the Collector
@@ -84,6 +99,7 @@ object ApiConfig {
       .addInterceptor(chuckerInterceptor)
       .connectTimeout(15, TimeUnit.SECONDS)
       .readTimeout(20, TimeUnit.SECONDS)
+      .writeTimeout(60, TimeUnit.SECONDS)
       .build()
 
     val retrofitBuilder = Retrofit.Builder()
@@ -102,5 +118,4 @@ object ApiConfig {
 
     return retrofitBuilder.create(ApiService::class.java)
   }
-
 }

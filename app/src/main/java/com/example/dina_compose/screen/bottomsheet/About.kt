@@ -64,6 +64,15 @@ fun About()
         .align(Alignment.CenterHorizontally)
         .padding(top = 16.dp, bottom = 16.dp)
     )
+    Text(
+      text = "“DiNa” for quickly and easily share and organize contact information, without the hassle of physical business cards.",
+      color = Color.Black,
+      fontSize = 10.sp,
+      fontWeight = FontWeight.Bold,
+      modifier = Modifier
+        .align(Alignment.CenterHorizontally)
+        .padding(top = 16.dp, bottom = 16.dp)
+    )
   }
 }
 

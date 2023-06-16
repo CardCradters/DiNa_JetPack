@@ -1,5 +1,6 @@
 package com.example.dina_compose.screen.auth
 
+
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -17,8 +18,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,9 +28,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dina_compose.R
+import com.example.dina_compose.common.UiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +64,36 @@ fun Register(
   var passwordValue by remember { mutableStateOf("") }
   var registrationSuccessful by remember { mutableStateOf(false) }
   val context = LocalContext.current
+
+  val updateRegisState by rememberUpdatedState(newValue = viewModel.updateRegis.value)
+  val buttonState = remember {
+    mutableStateOf(true)
+  }
+
+  LaunchedEffect(updateRegisState) {
+    when (val currentState = updateRegisState) {
+
+      is UiState.Loading -> {
+        buttonState.value = false
+      }
+
+      is UiState.Success -> {
+        buttonState.value = true
+        Toast.makeText(context, currentState.data, Toast.LENGTH_SHORT).show()
+        navController.navigate("login_screen")
+      }
+
+      is UiState.Error -> {
+        buttonState.value = true
+        Toast.makeText(context, currentState.errorMessage, Toast.LENGTH_LONG).show()
+      }
+
+      else -> {
+        buttonState.value = true
+        // Nothing
+      }
+    }
+  }
 
   Column(
     modifier = Modifier
@@ -102,7 +136,7 @@ fun Register(
       label = { Text(text = stringResource(R.string.enter_Name)) },
       singleLine = true,
       colors = TextFieldDefaults.textFieldColors(
-        textColor = Color.Gray,
+//        textColor = Color.Gray,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
@@ -119,7 +153,7 @@ fun Register(
       label = { Text(text = stringResource(R.string.enter_phone)) },
       singleLine = true,
       colors = TextFieldDefaults.textFieldColors(
-        textColor = Color.Gray,
+//        textColor = Color.Gray,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
@@ -137,13 +171,12 @@ fun Register(
       singleLine = true,
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
       colors = TextFieldDefaults.textFieldColors(
-        textColor = Color.Gray,
+//        textColor = Color.Gray,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
       )
     )
-
     var passwordVisible by remember { mutableStateOf(false) }
     TextField(
       value = passwordValue,
@@ -154,22 +187,26 @@ fun Register(
         .padding(top = 16.dp),
       label = { Text(text = stringResource(R.string.enter_password)) },
       singleLine = true,
-      visualTransformation = if (passwordVisible) {
+      visualTransformation = if (passwordVisible)
+      {
         VisualTransformation.None
-      } else {
+      } else
+      {
         PasswordVisualTransformation()
       },
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
       colors = TextFieldDefaults.textFieldColors(
-        textColor = Color.Gray,
+//        textColor = Color.Gray,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
       ),
       trailingIcon = {
-        val visibilityIcon = if (passwordVisible) {
+        val visibilityIcon = if (passwordVisible)
+        {
           Icons.Filled.VisibilityOff
-        } else {
+        } else
+        {
           Icons.Filled.Visibility
         }
         IconButton(
@@ -183,40 +220,60 @@ fun Register(
       }
     )
     Spacer(Modifier.height(24.dp))
-    Button(
+    Spacer(Modifier.height(4.dp))
+    Row(
+      modifier = Modifier
+        .align(Alignment.CenterHorizontally),
+    ) {
+      Text(
+        text = stringResource(R.string.have_namecard),
+        style = MaterialTheme.typography.bodySmall,
+        color = Color.Black
+      )
+      Spacer(Modifier.width(4.dp))
+      ClickableText(
+        text = AnnotatedString(stringResource(R.string.open_scanner)),
+        style = MaterialTheme.typography.labelMedium,
+        onClick = {
+          navController.navigate("register2_screen")
+        }
+      )
+    }
+    androidx.compose.material3.Button(
+      enabled = buttonState.value, // TODO
       onClick = {
         viewModel.registerUser(
           name = nameValue,
           email = emailValue,
-          phone = phoneValue,
+          phoneNumber = phoneValue,
           password = passwordValue,
           context = context
-        ) { success, message ->
-          registrationSuccessful = success
-          if (success)
-          {
-            navController.navigate("login_screen")
-          } else
-          {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-          }
-        }
+        )
+//        { success, message ->
+//          Log.e("Register", "Registration error: eror")
+//          registrationSuccessful = success
+//          if (success)
+//          {
+//            navController.navigate("login_screen")
+//          } else
+//          {
+//            Log.e("Registration", "Error: $message")
+//          }
+//        }
       },
-      colors = buttonColors(Color(0xFF83B9E2)),
+      colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
       modifier = Modifier
         .fillMaxWidth()
-        .height(44.dp)
-//          .padding(top = 16.dp)
+        .padding(top = 16.dp)
     ) {
-      Text(
-        text = stringResource(R.string.register),
-        style = androidx.compose.material.MaterialTheme.typography.subtitle1,
-        fontWeight = FontWeight.Bold,
-        color = Color.Black
-      )
+      // TODO
+      if (buttonState.value) {
+        androidx.compose.material3.Text(text = stringResource(R.string.register))
+      } else {
+        CircularProgressIndicator()
+      }
+
     }
-
-
     Row(
       modifier = Modifier
         .align(Alignment.CenterHorizontally)
@@ -232,8 +289,6 @@ fun Register(
     IconButton(
       onClick = { /*TODO*/ },
       modifier = Modifier
-//        .size(width = 124.dp, height = 48.dp)
-//        .padding(top = 16.dp)
         .fillMaxWidth()
         .align(Alignment.CenterHorizontally)
     ) {
@@ -256,7 +311,6 @@ fun Register(
     Row(
       modifier = Modifier
         .align(Alignment.CenterHorizontally),
-//          .padding(top = 16.dp),
     ) {
       Text(
         text = stringResource(R.string.have_account),
@@ -269,26 +323,6 @@ fun Register(
         style = MaterialTheme.typography.labelMedium,
         onClick = {
           navController.navigate("login_screen")
-        }
-      )
-    }
-    Spacer(Modifier.height(4.dp))
-    Row(
-      modifier = Modifier
-        .align(Alignment.CenterHorizontally),
-//          .padding(top = 16.dp),
-    ) {
-      Text(
-        text = stringResource(R.string.have_namecard),
-        style = MaterialTheme.typography.bodySmall,
-        color = Color.Black
-      )
-      Spacer(Modifier.width(4.dp))
-      ClickableText(
-        text = AnnotatedString(stringResource(R.string.open_scanner)),
-        style = MaterialTheme.typography.labelMedium,
-        onClick = {
-          navController.navigate("register2_screen")
         }
       )
     }

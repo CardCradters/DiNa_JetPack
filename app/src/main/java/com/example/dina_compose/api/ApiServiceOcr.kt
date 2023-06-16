@@ -9,6 +9,7 @@ import retrofit2.http.Part
 
 interface ApiServiceOcr
 {
+
   @Multipart
   @POST("/ocr")
   suspend fun recognizeImage(

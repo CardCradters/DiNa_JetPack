@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -62,6 +63,7 @@ fun Profile(
   val contextForToast = LocalContext.current
   val scrollState = rememberLazyListState()
   val profile: ProfileRequest? by viewModel.profile.collectAsState(null)
+  val loadingState = remember { mutableStateOf(false) }
   val placeholders = listOf(
     if (profile?.emailCompany.isNullOrEmpty()) "Email Company" else profile?.emailCompany,
     if (profile?.phoneFaxCompany.isNullOrEmpty()) "Telephone" else profile?.phoneFaxCompany,
@@ -73,8 +75,14 @@ fun Profile(
 //  val qrCodeBitmap: Bitmap? = viewModel.generateQRCodeBitmap(data)
   var openDialog by remember { mutableStateOf(false) }
   LaunchedEffect(Unit) {
-    viewModel.fetchProfile(contextForToast)
+    viewModel.profile.collect { newProfile ->
 
+      loadingState.value = true
+
+      viewModel.fetchProfile(contextForToast)
+
+      loadingState.value = false
+    }
   }
 
 
@@ -132,16 +140,11 @@ fun Profile(
               ProfilePicture(viewModel = viewModel, uploadRequest = UploadRequest(""))
             }
 
-//            qrCodeBitmap?.let { bitmap ->
-//              Image(
-//                bitmap = bitmap.asImageBitmap(),
-//                contentDescription = null,
-//                modifier = Modifier
-//                  .size(400.dp)
-//                  .padding(top = 16.dp)
-//              )
-//            }
-
+            if (loadingState.value) {
+              LinearProgressIndicator(modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF83B9E2)))
+            }
             Card(
               modifier = Modifier
                 .padding(top = 66.dp)

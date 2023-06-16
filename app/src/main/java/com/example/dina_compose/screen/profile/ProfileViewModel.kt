@@ -170,7 +170,8 @@ class ProfileViewModel (private val savedStateHandle: SavedStateHandle) :
     )
 
     when (val result = safeApiCall {
-      ApiConfig.apiService(context).postProfile(request)
+      ApiConfig.apiService(context).
+      postProfile(request)
     })
     {
       is DataState.Error -> callback(false, result.message)

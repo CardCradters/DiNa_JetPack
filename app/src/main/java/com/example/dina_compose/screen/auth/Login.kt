@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -58,6 +60,10 @@ fun Login(
   var passwordValue by remember { mutableStateOf("") }
   val context = LocalContext.current
   var passwordVisible by remember { mutableStateOf(false) }
+  val loadingState = remember { mutableStateOf(false) }
+
+
+
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -103,7 +109,7 @@ fun Login(
       singleLine = true,
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
       colors = TextFieldDefaults.textFieldColors(
-        textColor = Color.Gray,
+//        textColor = Color.Gray,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
@@ -123,10 +129,14 @@ fun Login(
         )
       },
       singleLine = true,
-      visualTransformation = PasswordVisualTransformation(),
+      visualTransformation = if (passwordVisible) {
+        VisualTransformation.None
+      } else {
+        PasswordVisualTransformation()
+      },
       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
       colors = TextFieldDefaults.textFieldColors(
-        textColor = Color.Gray,
+//        textColor = Color.Gray,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent
@@ -175,7 +185,13 @@ fun Login(
         color = Color.Black
       )
     }
-
+    if (loadingState.value) {
+      CircularProgressIndicator(
+        modifier = Modifier
+          .size(24.dp)
+          .align(Alignment.CenterHorizontally)
+      )
+    }
     Row(
       modifier = Modifier
         .align(Alignment.CenterHorizontally)
@@ -191,8 +207,6 @@ fun Login(
     IconButton(
       onClick = { /*TODO*/ },
       modifier = Modifier
-//        .size(width = 124.dp, height = 48.dp)
-//        .padding(top = 16.dp)
         .fillMaxWidth()
         .align(Alignment.CenterHorizontally)
     ) {

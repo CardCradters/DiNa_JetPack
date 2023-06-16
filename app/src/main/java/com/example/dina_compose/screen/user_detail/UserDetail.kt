@@ -303,7 +303,7 @@ fun profilePict(profileRequest: ProfileRequest ) {
     contentAlignment = Alignment.BottomEnd,
   ) {
     Image(
-      painter = painter,
+      painter = painterResource(id = R.drawable.baseline_account_circle_24),
       contentDescription = "Profile Picture",
       modifier = Modifier
         .size(140.dp)
@@ -312,22 +312,6 @@ fun profilePict(profileRequest: ProfileRequest ) {
         .background(color = Color.Black.copy(alpha = ContentAlpha.medium))
         .shadow(elevation = 5.dp, shape = CircleShape)
     )
-
-//    IconButton(
-//      onClick = {
-//        galleryLauncher.launch("image/*")
-//      }
-//    ) {
-//      Icon(
-//        modifier = Modifier
-//          .clip(CircleShape)
-//          .background(color = Color.Black)
-//          .border(width = 1.dp, color = Color.White, shape = CircleShape)
-//          .padding(4.dp),
-//        imageVector = Icons.Outlined.Edit,
-//        tint = Color.White,
-//        contentDescription = "Edit"
-//      )
   }
 }
 

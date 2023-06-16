@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import coil.compose.rememberImagePainter
 import com.example.dina_compose.R
 import com.example.dina_compose.data.UserRequest
 import com.example.dina_compose.screen.user_detail.UserDetailViewModel
@@ -42,26 +41,29 @@ fun ClickableIcon(
   onClick: () -> Unit
 ) {
   Icon(
-    painter = painterResource(id = if (isStared) R.drawable.baseline_star_outline_24 else R.drawable
-      .baseline_star_25),
+    painter = painterResource(id = if (isStared) R.drawable.baseline_star_25 else R.drawable
+      .baseline_star_outline_24),
     contentDescription = "Star",
     modifier = Modifier.clickable { onClick() }
   )
 }
 
+
 @Composable
-fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewModel,
-                 navController: NavController)
+fun CardListItem(
+  user: UserRequest, context: Context, viewModel: UserDetailViewModel,
+  navController: NavController
+)
 {
-
-  val painter = run {
-    if (!user.filename.isNullOrEmpty()) {
-      rememberImagePainter(data = user.filename)
-    } else {
-      painterResource(id = R.drawable.baseline_account_circle_24)
-    }
-  }
-
+//  val painter = run {
+//    if (!user.filename.isNullOrEmpty())
+//    {
+//      rememberImagePainter(data = user.filename)
+//    } else
+//    {
+//      painterResource(id = R.drawable.baseline_account_circle_24)
+//    }
+//  }
   val userDetail by viewModel.userDetail.collectAsState()
 
 
@@ -74,7 +76,7 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
           popUpTo(navController.graph.findStartDestination().id) {
             saveState = true
           }
-        }?:   logMessage("User detail not available")
+        } ?: logMessage("User detail not available")
       }
       .wrapContentHeight()
       .fillMaxWidth(),
@@ -94,7 +96,7 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
         Image(
-          painter = painter,
+          painter =  painterResource(id = R.drawable.baseline_account_circle_24),
           contentDescription = "Profile Picture",
           modifier = Modifier
             .clip(shape = CircleShape)
@@ -110,7 +112,6 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
         Column(
           Modifier
             .padding(start = 8.dp),
-//              .fillMaxHeight(),
           verticalArrangement = Arrangement.Center
         ) {
           Text(
@@ -132,23 +133,19 @@ fun CardListItem(user: UserRequest, context: Context, viewModel: UserDetailViewM
           )
         }
       }
-      ClickableIcon(
-        isStared = user.stared
-      ) {
-        viewModel.starred(
-          context = context,
-          uid = user.uid,
-//          name = user.name,
-//          job_title = user.job_title,
-//          workplace = user.workplace,
-//          isStarred = !user.stared,
-//          filename = user.filename ?: "",
-//          storagePath = user.storagePath,
-        )
+      ClickableIcon(isStared = user.stared) {
+        if (user.stared) {
+          viewModel.deleteStar(context, user.uid)
+        } else {
+          viewModel.starred(context, user.uid)
+        }
       }
     }
   }
 }
-fun logMessage(message: String) {
+
+
+fun logMessage(message: String)
+{
   Log.d("MyApp", message)
 }

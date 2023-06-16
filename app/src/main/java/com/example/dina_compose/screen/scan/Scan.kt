@@ -4,12 +4,14 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +21,7 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -66,13 +69,13 @@ fun Scan(navController: NavHostController,
   val contextForToast = LocalContext.current
   val context = LocalContext.current
   val profiles: ProfileRequest? by viewModel.profile.collectAsState()
-
-
-
+  val loadingState = remember { mutableStateOf(false) }
   var openDialog by remember { mutableStateOf(false) }
 
   LaunchedEffect(Unit) {
+    loadingState.value = true // Memperbarui state loading sebelum memuat data
     viewModel.fetchProfile(context)
+    loadingState.value = false // Memperbarui state loading setelah selesai memuat data
   }
 
   val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -138,26 +141,30 @@ fun Scan(navController: NavHostController,
                 onClick = {
                   galleryLauncher.launch("image/*")
                 },
-                colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
+                colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
                 modifier = Modifier.padding(16.dp)
               ) {
                 Text(text = "Select Image")
               }
 
-              Spacer(modifier = Modifier.width(10.dp))
+              Spacer(modifier = Modifier.width(7.dp))
 
               Button(
                 onClick = {
                   navController.navigate("camera_preview")
                 },
-                colors = ButtonDefaults.buttonColors(Color(0xFF83B9E2)),
+                colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
                 modifier = Modifier.padding(16.dp)
               ) {
-                Text(text = "Scan with Camera")
+                Text(text = "Open Camera")
               }
             }
 
-
+            if (loadingState.value) {
+              LinearProgressIndicator(modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF83B9E2)))
+            }
     Spacer(modifier = Modifier.height(16.dp))
 
     Image(

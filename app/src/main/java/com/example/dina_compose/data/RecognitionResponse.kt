@@ -1,7 +1,7 @@
 package com.example.dina_compose.data
 
 data class RecognitionResponse(
-  val name: String,
-  val email: String,
-  val phoneNumber: String
+  val phoneNumber: String? = null,
+  val name: List<String?>? = null,
+  val email: String? = null
 )

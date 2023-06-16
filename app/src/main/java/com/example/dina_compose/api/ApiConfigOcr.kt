@@ -7,6 +7,7 @@ import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class ApiConfigOcr {
   private val baseUrl: String = "https://perform-ocr-wf2dwnbrwq-et.a.run.app/"
@@ -18,7 +19,11 @@ class ApiConfigOcr {
 
     val client = OkHttpClient.Builder()
       .addInterceptor(loggingInterceptor)
+      .connectTimeout(60, TimeUnit.SECONDS)
+      .readTimeout(60, TimeUnit.SECONDS)
+      .writeTimeout(60, TimeUnit.SECONDS)
       .build()
+
 
     val retrofit = Retrofit.Builder()
       .baseUrl(baseUrl)

@@ -49,16 +49,45 @@ class UserDetailViewModel : ViewModel()
     }
   }
 
-  suspend fun starred(
+  suspend fun deleteUser(
     id: String,
-    request: StaredRequest,
     context: Context
   ): DataState<UserResponse>
   {
     return safeApiCall {
-      ApiConfig.apiService(context).starred(id, request)
+      ApiConfig.apiService(context).deleteUser(id)
     }
   }
+
+  fun starred(
+    context: Context,
+    uid: String,
+    callback: (Boolean, String) -> Unit = { _, _ -> }
+  ) = viewModelScope.launch {
+    val staredRequest = StaredRequest(uid = uid)
+
+    when (val result = safeApiCall { ApiConfig.apiService(context).starred(uid, staredRequest) }) {
+      is DataState.Error -> callback(false, result.message)
+      DataState.Loading -> Unit
+      is DataState.Result -> callback(true, "Berhasil")
+    }
+  }
+
+
+  fun deleteStar(
+    context: Context,
+    uid: String,
+    callback: (Boolean, String) -> Unit = { _, _ -> }
+  ) = viewModelScope.launch {
+
+    when (val result = safeApiCall { ApiConfig.apiService(context).deleteStar(uid) }) {
+      is DataState.Error -> callback(false, result.message)
+      DataState.Loading -> Unit
+      is DataState.Result -> callback(true, "Berhasil")
+    }
+  }
+
+
 }
 
 
